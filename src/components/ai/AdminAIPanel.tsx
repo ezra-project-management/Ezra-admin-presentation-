@@ -81,10 +81,12 @@ export function AdminAIPanel() {
           model: 'claude-sonnet-4-20250514',
           max_tokens: 1000,
           system: SYSTEM_PROMPT,
-          messages: [...messages, userMessage].map((m) => ({
-            role: m.role === 'ai' ? 'assistant' : 'user',
-            content: m.text,
-          })),
+          messages: [...messages, userMessage]
+  .filter((m) => m.id !== '1')
+  .map((m) => ({
+    role: m.role === 'ai' ? 'assistant' : 'user',
+    content: m.text,
+  })),
         }),
       })
       const data = await response.json()
