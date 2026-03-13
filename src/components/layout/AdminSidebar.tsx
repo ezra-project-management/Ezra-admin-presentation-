@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
@@ -29,12 +30,12 @@ interface NavGroup {
 
 /* ─── Service Bubbles ─── */
 const SERVICE_BUBBLES = [
-  { label: 'Salon', icon: Scissors, bg: 'bg-teal-400/90', glow: 'animate-glow-teal', count: 5, href: '/services/salon-spa' },
-  { label: 'Gym', icon: Dumbbell, bg: 'bg-emerald-400/90', glow: 'animate-glow-teal', count: 3, href: '/services/gym' },
-  { label: 'Rooms', icon: Bed, bg: 'bg-violet-400/90', glow: 'animate-glow-purple', count: 12, href: '/services/rooms' },
-  { label: 'Pool', icon: Waves, bg: 'bg-cyan-400/90', glow: 'animate-glow-cyan', count: 1, href: '/services/swimming-pool' },
-  { label: 'Events', icon: Music, bg: 'bg-amber-400/90', glow: 'animate-glow-amber', count: 2, href: '/services/ballroom' },
-  { label: 'Board', icon: Monitor, bg: 'bg-blue-400/90', glow: 'animate-glow-pulse', count: 4, href: '/services/boardroom' },
+  { label: 'Salon', icon: Scissors, image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=120&h=120&fit=crop&q=80', count: 5, href: '/services/salon-spa' },
+  { label: 'Gym', icon: Dumbbell, image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=120&h=120&fit=crop&q=80', count: 3, href: '/services/gym' },
+  { label: 'Rooms', icon: Bed, image: '/images/image-resizing-9.avif', count: 12, href: '/services/rooms' },
+  { label: 'Pool', icon: Waves, image: '/images/image-resizing-10.avif', count: 1, href: '/services/swimming-pool' },
+  { label: 'Events', icon: Music, image: '/images/hero-banquet.jpeg', count: 2, href: '/services/ballroom' },
+  { label: 'Board', icon: Monitor, image: '/images/image-resizing-6.avif', count: 4, href: '/services/boardroom' },
 ]
 
 const NAV_GROUPS: NavGroup[] = [
@@ -133,78 +134,80 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
 
   return (
     <aside
-      className="fixed left-0 top-0 h-full sidebar-gradient z-40 flex flex-col transition-all duration-300"
+      className="fixed left-0 top-0 h-full sidebar-gradient z-40 flex flex-col transition-all duration-300 overflow-hidden"
       style={{ width: collapsed ? 56 : 240 }}
     >
       {/* Logo */}
-      <div className="h-16 flex items-center px-4 border-b border-gold/15 shrink-0">
+      <div className="relative h-16 flex items-center px-4 border-b border-gold/12 shrink-0 z-10">
         {collapsed ? (
-          <span className="font-mono font-bold text-gold text-lg mx-auto tracking-tight">EA</span>
+          <div className="w-9 h-9 mx-auto rounded-xl bg-gradient-to-br from-gold via-amber-400 to-gold flex items-center justify-center shadow-lg shadow-gold/20 animate-glow-amber">
+            <span className="font-mono font-bold text-navy text-sm tracking-tight">EA</span>
+          </div>
         ) : (
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gold to-amber-300 flex items-center justify-center animate-glow-amber">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gold via-amber-400 to-gold flex items-center justify-center shadow-lg shadow-gold/20 animate-glow-amber ring-1 ring-gold/30">
               <span className="font-mono font-bold text-navy text-sm">EA</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-semibold text-white leading-tight">Ezra Annex</span>
-              <span className="text-[10px] font-medium bg-gradient-to-r from-gold to-amber-400 text-navy px-1.5 rounded w-fit">Admin</span>
+              <span className="text-[13px] font-semibold text-white leading-tight tracking-wide">Ezra Annex</span>
+              <span className="text-[9px] font-semibold uppercase tracking-[0.15em] bg-gradient-to-r from-gold to-amber-300 bg-clip-text text-transparent">Management</span>
             </div>
           </div>
         )}
       </div>
 
-      {/* Service Bubbles — Colorful Oval Grid */}
+      {/* Service Bubbles — Image Grid */}
       {!collapsed && (
-        <div className="px-3 pt-4 pb-2 border-b border-gold/10">
+        <div className="px-3 pt-4 pb-3 border-b border-gold/10">
           <div className="grid grid-cols-3 gap-2">
-            {SERVICE_BUBBLES.map((svc, i) => {
-              const Icon = svc.icon
-              return (
-                <Link
-                  key={svc.label}
-                  href={svc.href}
-                  className="service-bubble group flex flex-col items-center"
-                  style={{ animationDelay: `${i * 0.08}s` }}
-                >
-                  <div className={cn(
-                    'relative w-12 h-12 rounded-[18px] flex items-center justify-center',
-                    svc.bg, svc.glow
-                  )}>
-                    <Icon className="w-5 h-5 text-white drop-shadow-sm" />
-                    {/* Vertical count oval */}
-                    <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[22px] rounded-full bg-white text-[10px] font-bold text-navy flex items-center justify-center shadow-md border border-white/50 px-1">
-                      {svc.count}
-                    </span>
-                  </div>
-                  <span className="text-[10px] text-amber-200/80 mt-1 font-medium group-hover:text-white transition-colors">
-                    {svc.label}
+            {SERVICE_BUBBLES.map((svc, i) => (
+              <Link
+                key={svc.label}
+                href={svc.href}
+                className="service-bubble group flex flex-col items-center"
+                style={{ animationDelay: `${i * 0.08}s` }}
+              >
+                <div className="relative w-[58px] h-[58px] rounded-[16px] overflow-hidden ring-1 ring-gold/20 group-hover:ring-gold/50 transition-all duration-300 shadow-lg group-hover:shadow-gold/20">
+                  <Image
+                    src={svc.image}
+                    alt={svc.label}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    sizes="58px"
+                  />
+                  {/* Gold overlay sheen */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-gold/10 group-hover:from-black/30 transition-all duration-300" />
+                  {/* Count badge */}
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] rounded-full bg-gradient-to-br from-gold to-amber-400 text-[9px] font-bold text-navy flex items-center justify-center shadow-md px-1 z-10">
+                    {svc.count}
                   </span>
-                </Link>
-              )
-            })}
+                </div>
+                <span className="text-[10px] text-gold/70 mt-1.5 font-medium group-hover:text-gold transition-colors tracking-wide">
+                  {svc.label}
+                </span>
+              </Link>
+            ))}
           </div>
         </div>
       )}
 
-      {/* Collapsed bubbles - just icons */}
+      {/* Collapsed bubbles - image thumbnails */}
       {collapsed && (
-        <div className="flex flex-col items-center gap-1.5 py-3 border-b border-gold/10">
-          {SERVICE_BUBBLES.slice(0, 4).map(svc => {
-            const Icon = svc.icon
-            return (
-              <Link
-                key={svc.label}
-                href={svc.href}
-                className={cn('relative w-9 h-9 rounded-xl flex items-center justify-center service-bubble', svc.bg)}
-                title={svc.label}
-              >
-                <Icon className="w-4 h-4 text-white" />
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-white text-[8px] font-bold text-navy flex items-center justify-center shadow-sm">
-                  {svc.count}
-                </span>
-              </Link>
-            )
-          })}
+        <div className="flex flex-col items-center gap-2 py-3 border-b border-gold/10">
+          {SERVICE_BUBBLES.slice(0, 4).map(svc => (
+            <Link
+              key={svc.label}
+              href={svc.href}
+              className="relative w-9 h-9 rounded-xl overflow-hidden service-bubble ring-1 ring-gold/20 hover:ring-gold/50 transition-all shadow-sm hover:shadow-gold/15"
+              title={svc.label}
+            >
+              <Image src={svc.image} alt={svc.label} fill className="object-cover" sizes="36px" />
+              <div className="absolute inset-0 bg-black/20" />
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-gradient-to-br from-gold to-amber-400 text-[7px] font-bold text-navy flex items-center justify-center shadow-sm z-10">
+                {svc.count}
+              </span>
+            </Link>
+          ))}
         </div>
       )}
 
@@ -213,7 +216,7 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
         {NAV_GROUPS.map(group => (
           <div key={group.label} className="mb-0.5">
             {!collapsed && (
-              <div className="text-[10px] font-semibold text-gold/50 uppercase tracking-widest px-4 mb-1 mt-4 first:mt-2">
+              <div className="text-[9px] font-bold text-gold/35 uppercase tracking-[0.2em] px-4 mb-1 mt-5 first:mt-2">
                 {group.label}
               </div>
             )}
@@ -276,26 +279,26 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
       </nav>
 
       {/* User section */}
-      <div className="border-t border-gold/10 p-3 shrink-0">
+      <div className="relative border-t border-gold/12 p-3 shrink-0 z-10">
         {collapsed ? (
           <div className="flex flex-col items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gold to-amber-500 text-white text-xs font-medium flex items-center justify-center shadow-lg">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold to-amber-500 text-navy text-xs font-bold flex items-center justify-center shadow-lg shadow-gold/15 ring-2 ring-gold/20">
               JK
             </div>
-            <button className="text-gold/50 hover:text-red-400 transition-colors" aria-label="Logout">
-              <LogOut className="w-4 h-4" />
+            <button className="text-gold/40 hover:text-red-400 transition-colors" aria-label="Logout">
+              <LogOut className="w-3.5 h-3.5" />
             </button>
           </div>
         ) : (
-          <div className="flex items-center gap-3 bg-white/5 rounded-xl p-2.5">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold to-amber-500 text-white text-xs font-semibold flex items-center justify-center shrink-0 shadow-lg">
+          <div className="flex items-center gap-3 bg-gradient-to-r from-gold/8 to-transparent rounded-xl p-2.5 border border-gold/8 hover:border-gold/15 transition-all duration-300">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold via-amber-400 to-gold text-navy text-xs font-bold flex items-center justify-center shrink-0 shadow-lg shadow-gold/15 ring-2 ring-gold/20">
               JK
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-white truncate">James Kariuki</div>
-              <div className="text-[10px] text-gold/60">Manager</div>
+              <div className="text-[13px] font-medium text-white truncate">James Kariuki</div>
+              <div className="text-[10px] font-medium bg-gradient-to-r from-gold to-amber-300 bg-clip-text text-transparent">Manager</div>
             </div>
-            <button className="text-gold/40 hover:text-red-400 transition-colors" aria-label="Logout">
+            <button className="text-gold/30 hover:text-red-400 transition-colors" aria-label="Logout">
               <LogOut className="w-4 h-4" />
             </button>
           </div>
