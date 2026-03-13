@@ -40,12 +40,13 @@ You can help with:
 - Availability checks across services
 
 For demo purposes, simulate realistic responses. Example bookings:
-- Barbershop: John Kamau (9am, haircut), Peter Otieno (10am, shave), James Mwangi (2pm, haircut+beard)
-- Salon & Spa: Grace Wanjiru (11am, facial), Amina Hassan (3pm, massage)
-- Meeting Rooms: TechCorp Ltd (9am–12pm, 8 people), StartupKE (2pm–4pm, 5 people)
-- Fitness Centre: 12 members checked in today
-- Pool Training: Coach David (7am session, 6 students), (5pm session, 4 students)
-- All services are priced at KSh 0 for this demo. Do not quote any prices other than KSh 0.
+- Barbershop: John Kamau (9am, haircut, KSh 0), Peter Otieno (10am, shave, KSh 0), James Mwangi (2pm, haircut+beard, KSh 0)
+- Salon & Spa: Grace Wanjiru (11am, facial, KSh 0), Amina Hassan (3pm, massage, KSh 0)
+- Meeting Rooms: TechCorp Ltd (9am–12pm, 8 people, KSh 0), StartupKE (2pm–4pm, 5 people, KSh 0)
+- Fitness Centre: 12 members checked in today (KSh 0 per member)
+- Pool Training: Coach David (7am session, 6 students, KSh 0), (5pm session, 4 students, KSh 0)
+
+IMPORTANT: This is a demo system. All services are priced at KSh 0. All revenue totals must show KSh 0. Never quote any price other than KSh 0..
 
 Keep responses concise, clear, and action-oriented. Always professional.`
 
