@@ -137,17 +137,17 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
       style={{ width: collapsed ? 56 : 240 }}
     >
       {/* Logo */}
-      <div className="h-16 flex items-center px-4 border-b border-white/10 shrink-0">
+      <div className="h-16 flex items-center px-4 border-b border-gold/15 shrink-0">
         {collapsed ? (
-          <span className="font-mono font-bold text-white text-lg mx-auto tracking-tight">EA</span>
+          <span className="font-mono font-bold text-gold text-lg mx-auto tracking-tight">EA</span>
         ) : (
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-cyan-300 flex items-center justify-center animate-glow-pulse">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-gold to-amber-300 flex items-center justify-center animate-glow-amber">
               <span className="font-mono font-bold text-navy text-sm">EA</span>
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-semibold text-white leading-tight">Ezra Annex</span>
-              <span className="text-[10px] font-medium bg-gradient-to-r from-cyan-400 to-blue-400 text-navy px-1.5 rounded w-fit">Admin</span>
+              <span className="text-[10px] font-medium bg-gradient-to-r from-gold to-amber-400 text-navy px-1.5 rounded w-fit">Admin</span>
             </div>
           </div>
         )}
@@ -155,7 +155,7 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
 
       {/* Service Bubbles — Colorful Oval Grid */}
       {!collapsed && (
-        <div className="px-3 pt-4 pb-2 border-b border-white/10">
+        <div className="px-3 pt-4 pb-2 border-b border-gold/10">
           <div className="grid grid-cols-3 gap-2">
             {SERVICE_BUBBLES.map((svc, i) => {
               const Icon = svc.icon
@@ -176,7 +176,7 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                       {svc.count}
                     </span>
                   </div>
-                  <span className="text-[10px] text-blue-200/80 mt-1 font-medium group-hover:text-white transition-colors">
+                  <span className="text-[10px] text-amber-200/80 mt-1 font-medium group-hover:text-white transition-colors">
                     {svc.label}
                   </span>
                 </Link>
@@ -188,7 +188,7 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
 
       {/* Collapsed bubbles - just icons */}
       {collapsed && (
-        <div className="flex flex-col items-center gap-1.5 py-3 border-b border-white/10">
+        <div className="flex flex-col items-center gap-1.5 py-3 border-b border-gold/10">
           {SERVICE_BUBBLES.slice(0, 4).map(svc => {
             const Icon = svc.icon
             return (
@@ -213,7 +213,7 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
         {NAV_GROUPS.map(group => (
           <div key={group.label} className="mb-0.5">
             {!collapsed && (
-              <div className="text-[10px] font-semibold text-blue-300/50 uppercase tracking-widest px-4 mb-1 mt-4 first:mt-2">
+              <div className="text-[10px] font-semibold text-gold/50 uppercase tracking-widest px-4 mb-1 mt-4 first:mt-2">
                 {group.label}
               </div>
             )}
@@ -232,18 +232,18 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                         'sidebar-nav-item flex items-center gap-3 px-3 py-2 text-sm rounded-lg mx-2 transition-all flex-1',
                         active
                           ? 'active text-white bg-white/12 font-medium backdrop-blur-sm'
-                          : 'text-blue-100/70 hover:text-white hover:bg-white/8',
+                          : 'text-white/70 hover:text-white hover:bg-white/8',
                         collapsed && 'justify-center px-0'
                       )}
                       title={collapsed ? item.label : undefined}
                     >
-                      <Icon className={cn('w-4 h-4 shrink-0 transition-colors', active ? 'text-cyan-300' : '')} />
+                      <Icon className={cn('w-4 h-4 shrink-0 transition-colors', active ? 'text-gold' : '')} />
                       {!collapsed && <span className="truncate">{item.label}</span>}
                     </Link>
                     {hasChildren && !collapsed && (
                       <button
                         onClick={() => toggleExpand(item.label)}
-                        className="p-1 mr-2 text-blue-300/40 hover:text-white transition-colors"
+                        className="p-1 mr-2 text-gold/40 hover:text-white transition-colors"
                         aria-label={`Toggle ${item.label}`}
                       >
                         <ChevronDown className={cn('w-3.5 h-3.5 transition-transform duration-200', isExpanded && 'rotate-180')} />
@@ -251,7 +251,7 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                     )}
                   </div>
                   {hasChildren && isExpanded && !collapsed && (
-                    <div className="ml-6 border-l border-white/10 mt-0.5 mb-1">
+                    <div className="ml-6 border-l border-gold/10 mt-0.5 mb-1">
                       {item.children!.map(child => (
                         <Link
                           key={child.href}
@@ -259,8 +259,8 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                           className={cn(
                             'block pl-4 pr-3 py-1.5 text-xs rounded-r-md mx-2 transition-all',
                             pathname === child.href
-                              ? 'text-cyan-300 font-medium bg-white/10'
-                              : 'text-blue-200/50 hover:text-white hover:bg-white/5'
+                              ? 'text-gold font-medium bg-white/10'
+                              : 'text-amber-200/60 hover:text-white hover:bg-white/5'
                           )}
                         >
                           {child.label}
@@ -276,26 +276,26 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
       </nav>
 
       {/* User section */}
-      <div className="border-t border-white/10 p-3 shrink-0">
+      <div className="border-t border-gold/10 p-3 shrink-0">
         {collapsed ? (
           <div className="flex flex-col items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white text-xs font-medium flex items-center justify-center shadow-lg">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gold to-amber-500 text-white text-xs font-medium flex items-center justify-center shadow-lg">
               JK
             </div>
-            <button className="text-blue-300/50 hover:text-red-400 transition-colors" aria-label="Logout">
+            <button className="text-gold/50 hover:text-red-400 transition-colors" aria-label="Logout">
               <LogOut className="w-4 h-4" />
             </button>
           </div>
         ) : (
           <div className="flex items-center gap-3 bg-white/5 rounded-xl p-2.5">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white text-xs font-semibold flex items-center justify-center shrink-0 shadow-lg">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold to-amber-500 text-white text-xs font-semibold flex items-center justify-center shrink-0 shadow-lg">
               JK
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-sm font-medium text-white truncate">James Kariuki</div>
-              <div className="text-[10px] text-cyan-300/60">Manager</div>
+              <div className="text-[10px] text-gold/60">Manager</div>
             </div>
-            <button className="text-blue-300/40 hover:text-red-400 transition-colors" aria-label="Logout">
+            <button className="text-gold/40 hover:text-red-400 transition-colors" aria-label="Logout">
               <LogOut className="w-4 h-4" />
             </button>
           </div>

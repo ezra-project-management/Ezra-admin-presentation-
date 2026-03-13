@@ -2,7 +2,9 @@
 
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { CalendarDays, DollarSign, Star } from 'lucide-react'
+import Image from 'next/image'
+import { useState } from 'react'
+import { CalendarDays, DollarSign, Star, ImageIcon, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { MOCK_BOOKINGS } from '@/lib/mock-data'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import { PageHeader } from '@/components/ui/PageHeader'
@@ -15,10 +17,119 @@ const SERVICE_NAMES: Record<string, string> = {
   'swimming-pool': 'Swimming Pool', rooms: 'Accommodation',
 }
 
+const SERVICE_IMAGES: Record<string, { src: string; alt: string }[]> = {
+  'salon-spa': [
+    { src: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&q=80', alt: 'Salon interior' },
+    { src: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80', alt: 'Hair styling station' },
+    { src: 'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=800&q=80', alt: 'Spa treatment room' },
+    { src: 'https://images.unsplash.com/photo-1540555700478-4be289fbec6d?w=800&q=80', alt: 'Nail salon' },
+  ],
+  barbershop: [
+    { src: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=80', alt: 'Barbershop chair' },
+    { src: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80', alt: 'Barber tools' },
+    { src: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=80', alt: 'Barbershop interior' },
+  ],
+  gym: [
+    { src: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80', alt: 'Gym equipment' },
+    { src: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=800&q=80', alt: 'Weight training area' },
+    { src: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800&q=80', alt: 'Cardio section' },
+    { src: 'https://images.unsplash.com/photo-1576678927484-cc907957088c?w=800&q=80', alt: 'Personal training' },
+  ],
+  boardroom: [
+    { src: '/images/image-resizing-6.avif', alt: 'Executive boardroom' },
+    { src: '/images/image-resizing-5.avif', alt: 'Conference setup' },
+    { src: '/images/image-resizing-7.avif', alt: 'Meeting room' },
+  ],
+  ballroom: [
+    { src: '/images/hero-banquet.jpeg', alt: 'Grand ballroom' },
+    { src: '/images/image-resizing-3.avif', alt: 'Ballroom event setup' },
+    { src: '/images/image-resizing-4.avif', alt: 'Ballroom reception' },
+  ],
+  'banquet-hall': [
+    { src: '/images/hero-banquet.jpeg', alt: 'Banquet hall dining' },
+    { src: '/images/hero-table.jpeg', alt: 'Banquet table setting' },
+    { src: '/images/image-resizing-3.avif', alt: 'Banquet event' },
+  ],
+  'swimming-pool': [
+    { src: '/images/image-resizing-10.avif', alt: 'Swimming pool' },
+    { src: '/images/image-resizing-11.avif', alt: 'Pool area' },
+    { src: '/images/image-resizing.avif', alt: 'Pool lounge' },
+  ],
+  rooms: [
+    { src: '/images/image-resizing-9.avif', alt: 'Deluxe suite' },
+    { src: '/images/image-resizing-8.avif', alt: 'Standard room' },
+    { src: '/images/image-resizing-12.avif', alt: 'Premium accommodation' },
+    { src: '/images/image-resizing.jpeg', alt: 'Room interior' },
+  ],
+}
+
+function ServiceGallery({ images }: { images: { src: string; alt: string }[] }) {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+
+  return (
+    <>
+      <div className="bg-white rounded-[10px] border border-gray-100 shadow-[var(--shadow-card)] overflow-hidden">
+        <div className="p-4 border-b border-gray-100 flex items-center gap-2">
+          <ImageIcon className="w-4 h-4 text-gold" />
+          <h3 className="text-sm font-semibold text-gray-900">Gallery</h3>
+          <span className="text-xs text-gray-400 ml-auto">{images.length} images</span>
+        </div>
+        <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+          {images.map((img, i) => (
+            <button
+              key={i}
+              onClick={() => setLightboxIndex(i)}
+              className="group relative aspect-[4/3] rounded-lg overflow-hidden border border-gray-100 hover:border-gold/40 transition-all duration-300 hover:shadow-lg"
+            >
+              <Image
+                src={img.src}
+                alt={img.alt}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                sizes="(max-width: 768px) 50vw, 25vw"
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+              <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <p className="text-[10px] text-white truncate">{img.alt}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Lightbox */}
+      {lightboxIndex !== null && (
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center" onClick={() => setLightboxIndex(null)}>
+          <div className="relative w-[90vw] max-w-4xl aspect-[16/10] rounded-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+            <Image src={images[lightboxIndex].src} alt={images[lightboxIndex].alt} fill className="object-cover" sizes="90vw" />
+            <button onClick={() => setLightboxIndex(null)} className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/25 transition-colors">
+              <X className="w-4 h-4" />
+            </button>
+            {images.length > 1 && (
+              <>
+                <button onClick={() => setLightboxIndex((lightboxIndex - 1 + images.length) % images.length)} className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/25 transition-colors">
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button onClick={() => setLightboxIndex((lightboxIndex + 1) % images.length)} className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/25 transition-colors">
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </>
+            )}
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+              <p className="text-sm text-white/80">{lightboxIndex + 1} / {images.length} &mdash; {images[lightboxIndex].alt}</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
 export default function ServicePage() {
   const params = useParams()
   const slug = params.service as string
   const name = SERVICE_NAMES[slug] || slug
+  const images = SERVICE_IMAGES[slug] || []
 
   const tabs = [
     { label: 'Overview', href: `/services/${slug}` },
@@ -39,6 +150,14 @@ export default function ServicePage() {
           </Link>
         ))}
       </div>
+
+      {/* Gallery Section */}
+      {images.length > 0 && (
+        <div className="mb-6">
+          <ServiceGallery images={images} />
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <StatCard title="Today's Bookings" value={String(bookings.length)} icon={CalendarDays} iconColor="text-blue-600" iconBg="bg-blue-50" accentColor="bg-blue-500" />
         <StatCard title="Revenue This Month" value={formatCurrency(bookings.reduce((s, b) => s + b.amount, 0) * 4)} icon={DollarSign} iconColor="text-green-600" iconBg="bg-green-50" accentColor="bg-green-500" />
@@ -67,7 +186,7 @@ export default function ServicePage() {
           </tbody>
         </table>
         <div className="p-3 border-t border-gray-100 text-center">
-          <Link href="/bookings" className="text-xs text-brand font-medium hover:underline">View all bookings →</Link>
+          <Link href="/bookings" className="text-xs text-brand font-medium hover:underline">View all bookings &rarr;</Link>
         </div>
       </div>
     </div>
