@@ -45,6 +45,7 @@ For demo purposes, simulate realistic responses. Example bookings:
 - Meeting Rooms: TechCorp Ltd (9am–12pm, 8 people), StartupKE (2pm–4pm, 5 people)
 - Fitness Centre: 12 members checked in today
 - Pool Training: Coach David (7am session, 6 students), (5pm session, 4 students)
+- All services are priced at KSh 0 for this demo. Do not quote any prices other than KSh 0.
 
 Keep responses concise, clear, and action-oriented. Always professional.`
 
