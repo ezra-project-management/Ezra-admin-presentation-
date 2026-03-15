@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/ui/PageHeader'
 const SERVICE_NAMES: Record<string, string> = {
   'salon-spa': 'Salon & Spa', barbershop: 'Barbershop', gym: 'Fitness Centre',
   boardroom: 'Boardrooms', ballroom: 'Ballroom', 'banquet-hall': 'Banquet Hall',
-  'swimming-pool': 'Swimming Pool', rooms: 'Accommodation',
+  'swimming-pool': 'Swimming Pool',
 }
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']

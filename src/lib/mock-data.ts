@@ -103,7 +103,6 @@ export const MOCK_BOOKINGS: Booking[] = [
   { id: 'bk-002', reference: 'EZR-D4E5F6', customer: { name: 'David Omondi', email: 'david@example.com', phone: '+254723456789', avatar: 'DO' }, service: 'Boardroom', resource: 'Board Room A', staff: 'James K.', startAt: '2026-03-10T10:00:00Z', endAt: '2026-03-10T14:00:00Z', status: 'CHECKED_IN', amount: 20000, paymentMethod: 'MPESA', mpesaRef: 'QJK456DEF', createdAt: '2026-03-09T09:15:00Z' },
   { id: 'bk-003', reference: 'EZR-G7H8I9', customer: { name: 'Priya Mehta', email: 'priya@example.com', phone: '+254734567890', avatar: 'PM' }, service: 'Ballroom', resource: 'Grand Ballroom', staff: 'Sarah W.', startAt: '2026-03-15T16:00:00Z', endAt: '2026-03-15T23:00:00Z', status: 'CONFIRMED', amount: 120000, paymentMethod: 'MPESA', mpesaRef: 'QJK789GHI', createdAt: '2026-03-01T11:45:00Z' },
   { id: 'bk-004', reference: 'EZR-J1K2L3', customer: { name: 'James Waweru', email: 'james@example.com', phone: '+254745678901', avatar: 'JW' }, service: 'Gym', resource: 'Main Gym Floor', staff: 'Mike T.', startAt: '2026-03-10T06:00:00Z', endAt: '2026-03-10T07:30:00Z', status: 'COMPLETED', amount: 1200, paymentMethod: 'CASH', mpesaRef: null, createdAt: '2026-03-09T20:00:00Z' },
-  { id: 'bk-005', reference: 'EZR-M4N5O6', customer: { name: 'Grace Achieng', email: 'grace@example.com', phone: '+254756789012', avatar: 'GA' }, service: 'Accommodation', resource: 'Deluxe Room 204', staff: 'Peter O.', startAt: '2026-03-12T14:00:00Z', endAt: '2026-03-14T11:00:00Z', status: 'CONFIRMED', amount: 17000, paymentMethod: 'MPESA', mpesaRef: 'QJK012MNO', createdAt: '2026-03-08T16:30:00Z' },
   { id: 'bk-006', reference: 'EZR-P7Q8R9', customer: { name: 'Brian Mutua', email: 'brian@example.com', phone: '+254767890123', avatar: 'BM' }, service: 'Barbershop', resource: 'Chair 2', staff: 'Tony B.', startAt: '2026-03-10T11:00:00Z', endAt: '2026-03-10T11:45:00Z', status: 'PENDING', amount: 800, paymentMethod: 'MPESA', mpesaRef: null, createdAt: '2026-03-10T08:00:00Z' },
   { id: 'bk-007', reference: 'EZR-S1T2U3', customer: { name: 'Fatima Hassan', email: 'fatima@example.com', phone: '+254778901234', avatar: 'FH' }, service: 'Swimming Pool', resource: 'Lane 3', staff: 'Coach Ali', startAt: '2026-03-10T07:00:00Z', endAt: '2026-03-10T08:00:00Z', status: 'CANCELLED', amount: 2500, paymentMethod: 'MPESA', mpesaRef: 'QJK345STU', createdAt: '2026-03-07T10:00:00Z' },
   { id: 'bk-008', reference: 'EZR-V4W5X6', customer: { name: 'Samuel Njoroge', email: 'samuel@example.com', phone: '+254789012345', avatar: 'SN' }, service: 'Banquet Hall', resource: 'Banquet Suite', staff: 'Rose A.', startAt: '2026-03-20T18:00:00Z', endAt: '2026-03-20T23:00:00Z', status: 'CONFIRMED', amount: 65000, paymentMethod: 'MPESA', mpesaRef: 'QJK678VWX', createdAt: '2026-03-05T14:00:00Z' },
@@ -133,7 +132,6 @@ export const MOCK_STAFF: StaffMember[] = [
   { id: 'st-002', name: 'James Kariuki', email: 'james.k@ezraannex.com', phone: '+254711000002', avatar: 'JK', role: 'MANAGER', departments: ['boardroom', 'banquet-hall', 'ballroom'], isOnDuty: true, joinDate: '2022-11-15' },
   { id: 'st-003', name: 'Tony Baraka', email: 'tony.b@ezraannex.com', phone: '+254711000003', avatar: 'TB', role: 'STAFF', departments: ['barbershop'], isOnDuty: true, joinDate: '2024-01-20' },
   { id: 'st-004', name: 'Mike Tanui', email: 'mike.t@ezraannex.com', phone: '+254711000004', avatar: 'MT', role: 'STAFF', departments: ['gym'], isOnDuty: false, joinDate: '2023-09-05' },
-  { id: 'st-005', name: 'Peter Otieno', email: 'peter.o@ezraannex.com', phone: '+254711000005', avatar: 'PO', role: 'STAFF', departments: ['rooms'], isOnDuty: true, joinDate: '2023-06-12' },
   { id: 'st-006', name: 'Sarah Wanjiru', email: 'sarah.w@ezraannex.com', phone: '+254711000006', avatar: 'SW', role: 'MANAGER', departments: ['ballroom', 'banquet-hall'], isOnDuty: false, joinDate: '2022-08-30' },
   { id: 'st-007', name: 'Coach Ali Hassan', email: 'ali.h@ezraannex.com', phone: '+254711000007', avatar: 'AH', role: 'STAFF', departments: ['swimming-pool'], isOnDuty: true, joinDate: '2024-03-01' },
   { id: 'st-008', name: 'Rose Adhiambo', email: 'rose.a@ezraannex.com', phone: '+254711000008', avatar: 'RA', role: 'STAFF', departments: ['banquet-hall', 'ballroom'], isOnDuty: true, joinDate: '2023-12-10' },
@@ -151,7 +149,6 @@ export const REVENUE_DAILY = [
 
 export const REVENUE_BY_SERVICE = [
   { service: 'Events', value: 420000, fill: '#0F2C4A' },
-  { service: 'Accommodation', value: 187000, fill: '#C9A84C' },
   { service: 'Wellness', value: 134500, fill: '#2E86AB' },
   { service: 'Business', value: 98000, fill: '#15803D' },
   { service: 'Fitness', value: 71000, fill: '#7C3AED' },
@@ -168,8 +165,6 @@ export const OCCUPANCY_DATA: OccupancyItem[] = [
   { resource: 'Gym Floor', current: 'Open', status: 'open', until: '9:00 PM' },
   { resource: 'Pool Lane 1', current: null, status: 'available', until: null },
   { resource: 'Pool Lane 2', current: 'Coach session', status: 'occupied', until: '8:00 AM' },
-  { resource: 'Room 101', current: null, status: 'available', until: null },
-  { resource: 'Room 204', current: 'Grace A.', status: 'occupied', until: 'Mar 14' },
 ]
 
 export const WALK_IN_QUEUE: QueueItem[] = [

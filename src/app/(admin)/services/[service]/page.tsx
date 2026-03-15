@@ -14,7 +14,7 @@ import { StatusBadge } from '@/components/ui/StatusBadge'
 const SERVICE_NAMES: Record<string, string> = {
   'salon-spa': 'Salon & Spa', barbershop: 'Barbershop', gym: 'Fitness Centre',
   boardroom: 'Boardrooms', ballroom: 'Ballroom', 'banquet-hall': 'Banquet Hall',
-  'swimming-pool': 'Swimming Pool', rooms: 'Accommodation',
+  'swimming-pool': 'Swimming Pool',
 }
 
 const SERVICE_IMAGES: Record<string, { src: string; alt: string }[]> = {
@@ -54,12 +54,6 @@ const SERVICE_IMAGES: Record<string, { src: string; alt: string }[]> = {
     { src: '/images/image-resizing-10.avif', alt: 'Swimming pool' },
     { src: '/images/image-resizing-11.avif', alt: 'Pool area' },
     { src: '/images/image-resizing.avif', alt: 'Pool lounge' },
-  ],
-  rooms: [
-    { src: '/images/image-resizing-9.avif', alt: 'Deluxe suite' },
-    { src: '/images/image-resizing-8.avif', alt: 'Standard room' },
-    { src: '/images/image-resizing-12.avif', alt: 'Premium accommodation' },
-    { src: '/images/image-resizing.jpeg', alt: 'Room interior' },
   ],
 }
 

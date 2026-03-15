@@ -15,7 +15,6 @@ const SERVICE_COLORS: Record<string, { bg: string; border: string }> = {
   'Gym': { bg: 'bg-green-100', border: 'border-green-500' },
   'Barbershop': { bg: 'bg-gray-200', border: 'border-gray-600' },
   'Swimming Pool': { bg: 'bg-cyan-100', border: 'border-cyan-500' },
-  'Accommodation': { bg: 'bg-purple-100', border: 'border-purple-500' },
   'Banquet Hall': { bg: 'bg-orange-100', border: 'border-orange-500' },
 }
 

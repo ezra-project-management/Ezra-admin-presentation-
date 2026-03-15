@@ -44,7 +44,6 @@ export function BookingFilters({ onFilterChange }: BookingFiltersProps) {
           <option>Gym</option>
           <option>Barbershop</option>
           <option>Swimming Pool</option>
-          <option>Accommodation</option>
           <option>Banquet Hall</option>
         </select>
         <select

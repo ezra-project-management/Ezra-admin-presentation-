@@ -26,15 +26,12 @@ const CATALOGUE: CatalogueItem[] = [
   { name: 'Boardroom - Half Day', category: 'Events', price: 12000 },
   { name: 'Boardroom - Full Day', category: 'Events', price: 20000 },
   { name: 'Ballroom Hire', category: 'Events', price: 120000 },
-  { name: 'Standard Room', category: 'Rooms', price: 8000 },
-  { name: 'Deluxe Room', category: 'Rooms', price: 12000 },
-  { name: 'Suite', category: 'Rooms', price: 17000 },
   { name: 'Catering Package', category: 'Add-ons', price: 5000 },
   { name: 'Photography', category: 'Add-ons', price: 15000 },
   { name: 'Parking Pass', category: 'Add-ons', price: 500 },
 ]
 
-const CATEGORIES = ['All', 'Salon', 'Barbershop', 'Gym', 'Events', 'Rooms', 'Add-ons']
+const CATEGORIES = ['All', 'Salon', 'Barbershop', 'Gym', 'Events', 'Add-ons']
 
 interface ItemCataloguePanelProps {
   onAddItem: (item: CatalogueItem) => void

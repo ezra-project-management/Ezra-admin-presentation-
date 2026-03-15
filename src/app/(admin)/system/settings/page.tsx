@@ -77,7 +77,7 @@ export default function SettingsPage() {
           <div><label className="text-xs font-medium text-gray-600 mb-1 block">Cancellation Policy</label><select className="w-full text-sm border border-gray-200 rounded-[7px] px-3 py-2"><option>Free cancellation up to 24hrs before</option><option>Free cancellation up to 48hrs before</option><option>No refund on cancellation</option></select></div>
           <div><h4 className="text-xs font-medium text-gray-600 mb-2">Minimum Notice Period</h4>
             <table className="w-full text-sm"><tbody className="divide-y divide-gray-50">
-              {['Salon & Spa', 'Boardroom', 'Ballroom', 'Gym', 'Accommodation'].map(s => (
+              {['Salon & Spa', 'Boardroom', 'Ballroom', 'Gym'].map(s => (
                 <tr key={s}><td className="py-2 text-gray-700">{s}</td><td className="py-2"><select className="text-xs border border-gray-200 rounded px-2 py-1"><option>1hr</option><option>2hrs</option><option>4hrs</option><option>24hrs</option><option>48hrs</option></select></td></tr>
               ))}
             </tbody></table>

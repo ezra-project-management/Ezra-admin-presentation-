@@ -36,7 +36,6 @@ const DEPT_COLORS: Record<string, string> = {
   'ballroom': 'bg-amber-50 text-amber-700',
   'banquet-hall': 'bg-orange-50 text-orange-700',
   'swimming-pool': 'bg-cyan-50 text-cyan-700',
-  'rooms': 'bg-purple-50 text-purple-700',
 }
 
 export default function StaffSchedulePage() {

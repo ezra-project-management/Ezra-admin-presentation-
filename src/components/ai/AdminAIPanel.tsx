@@ -27,7 +27,7 @@ const initialMessage: Message = {
 const SYSTEM_PROMPT = `CRITICAL DEMO INSTRUCTION: This is a demo system. ALL prices, fees, and revenue figures MUST be KSh 0. Never calculate or mention any monetary value other than KSh 0. If asked about revenue, earnings, or prices, always respond with KSh 0. Do not use any real-world pricing knowledge.
 Today is Thursday March 12 2026. Working hours: 6am–10pm daily.
 
-Services: Salon & Spa, Barbershop, Fitness Centre, Meeting Rooms, Ballroom, Banquet Hall, Swimming Pool Training, Accommodation.
+Services: Salon & Spa, Barbershop, Fitness Centre, Meeting Rooms, Ballroom, Banquet Hall, Swimming Pool Training.
 
 You can help with:
 - Viewing today's schedule, bookings, or appointments per service/staff

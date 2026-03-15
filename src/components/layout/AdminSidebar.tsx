@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
   LayoutDashboard, CalendarDays, ShoppingCart, Scissors, Dumbbell, Monitor, Music,
-  UtensilsCrossed, Waves, Bed, Users, UserCheck, TrendingUp, CreditCard, BarChart3,
+  UtensilsCrossed, Waves, Users, UserCheck, TrendingUp, CreditCard, BarChart3,
   LineChart, MessageSquare, Settings, Shield, ScrollText, ChevronDown, LogOut,
 } from 'lucide-react'
 
@@ -32,8 +32,7 @@ interface NavGroup {
 const SERVICE_BUBBLES = [
   { label: 'Salon', icon: Scissors, image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=120&h=120&fit=crop&q=80', count: 5, href: '/services/salon-spa' },
   { label: 'Gym', icon: Dumbbell, image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=120&h=120&fit=crop&q=80', count: 3, href: '/services/gym' },
-  { label: 'Rooms', icon: Bed, image: '/images/image-resizing-9.avif', count: 12, href: '/services/rooms' },
-  { label: 'Pool', icon: Waves, image: '/images/image-resizing-10.avif', count: 1, href: '/services/swimming-pool' },
+{ label: 'Pool', icon: Waves, image: '/images/image-resizing-10.avif', count: 1, href: '/services/swimming-pool' },
   { label: 'Events', icon: Music, image: '/images/hero-banquet.jpeg', count: 2, href: '/services/ballroom' },
   { label: 'Board', icon: Monitor, image: '/images/image-resizing-6.avif', count: 4, href: '/services/boardroom' },
 ]
@@ -75,7 +74,6 @@ const NAV_GROUPS: NavGroup[] = [
       { label: 'Ballroom', href: '/services/ballroom', icon: Music },
       { label: 'Banquet Hall', href: '/services/banquet-hall', icon: UtensilsCrossed },
       { label: 'Swimming Pool', href: '/services/swimming-pool', icon: Waves },
-      { label: 'Accommodation', href: '/services/rooms', icon: Bed },
     ],
   },
   {

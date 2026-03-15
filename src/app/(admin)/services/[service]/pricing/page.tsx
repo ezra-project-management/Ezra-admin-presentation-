@@ -7,7 +7,7 @@ import { formatCurrency } from '@/lib/utils'
 const SERVICE_NAMES: Record<string, string> = {
   'salon-spa': 'Salon & Spa', barbershop: 'Barbershop', gym: 'Fitness Centre',
   boardroom: 'Boardrooms', ballroom: 'Ballroom', 'banquet-hall': 'Banquet Hall',
-  'swimming-pool': 'Swimming Pool', rooms: 'Accommodation',
+  'swimming-pool': 'Swimming Pool',
 }
 
 const PRICING: Record<string, { item: string; duration: string; price: number }[]> = {
@@ -18,7 +18,6 @@ const PRICING: Record<string, { item: string; duration: string; price: number }[
   ballroom: [{ item: 'Ballroom Hire', duration: 'Full day', price: 120000 }],
   'banquet-hall': [{ item: 'Banquet Suite', duration: 'Full day', price: 65000 }, { item: 'Garden Area', duration: 'Full day', price: 40000 }],
   'swimming-pool': [{ item: 'Lane Booking', duration: '1 hr', price: 2500 }, { item: 'Coaching Session', duration: '1 hr', price: 3500 }],
-  rooms: [{ item: 'Standard Room', duration: 'Per night', price: 8000 }, { item: 'Deluxe Room', duration: 'Per night', price: 12000 }, { item: 'Suite', duration: 'Per night', price: 17000 }],
 }
 
 export default function PricingPage() {

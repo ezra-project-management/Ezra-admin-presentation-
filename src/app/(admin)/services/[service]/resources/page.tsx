@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 const SERVICE_NAMES: Record<string, string> = {
   'salon-spa': 'Salon & Spa', barbershop: 'Barbershop', gym: 'Fitness Centre',
   boardroom: 'Boardrooms', ballroom: 'Ballroom', 'banquet-hall': 'Banquet Hall',
-  'swimming-pool': 'Swimming Pool', rooms: 'Accommodation',
+  'swimming-pool': 'Swimming Pool',
 }
 
 const RESOURCES: Record<string, { name: string; capacity: number; status: string }[]> = {
@@ -18,7 +18,6 @@ const RESOURCES: Record<string, { name: string; capacity: number; status: string
   ballroom: [{ name: 'Grand Ballroom', capacity: 200, status: 'maintenance' }],
   'banquet-hall': [{ name: 'Banquet Suite', capacity: 150, status: 'available' }, { name: 'Garden Area', capacity: 80, status: 'available' }],
   'swimming-pool': [{ name: 'Lane 1', capacity: 2, status: 'available' }, { name: 'Lane 2', capacity: 2, status: 'in-use' }, { name: 'Lane 3', capacity: 2, status: 'available' }, { name: 'Lane 4', capacity: 2, status: 'available' }],
-  rooms: [{ name: 'Room 101', capacity: 2, status: 'available' }, { name: 'Room 102', capacity: 2, status: 'available' }, { name: 'Room 201', capacity: 2, status: 'in-use' }, { name: 'Room 202', capacity: 3, status: 'available' }, { name: 'Room 204', capacity: 3, status: 'in-use' }],
 }
 
 const STATUS_STYLES: Record<string, { bg: string; text: string; label: string }> = {
