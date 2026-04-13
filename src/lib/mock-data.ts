@@ -75,6 +75,7 @@ export const DEMO_STAFF_CREDENTIALS: { name: string; email: string; role: string
   { name: 'Coach Ali Hassan', email: 'ali.h@ezraannex.com', role: 'Staff', departments: 'Swimming Pool' },
   { name: 'Rose Adhiambo', email: 'rose.a@ezraannex.com', role: 'Staff', departments: 'Banquet Hall, Ballroom' },
   { name: 'Finance Desk', email: 'finance@ezraannex.com', role: 'Finance', departments: 'Accounts' },
+  { name: 'Front desk', email: 'frontdesk@ezraannex.com', role: 'Secretary / Front desk', departments: 'All touchpoints' },
 ]
 
 export interface OccupancyItem {
@@ -120,6 +121,7 @@ export const MOCK_BOOKINGS: Booking[] = [
   { id: 'bk-006', reference: 'EZR-P7Q8R9', customer: { name: 'Brian Mutua', email: 'brian@example.com', phone: '+254767890123', avatar: 'BM' }, service: 'Barbershop', resource: 'Chair 2', staff: 'Tony B.', startAt: '2026-03-10T11:00:00Z', endAt: '2026-03-10T11:45:00Z', status: 'PENDING', amount: 800, paymentMethod: 'MPESA', mpesaRef: null, createdAt: '2026-03-10T08:00:00Z' },
   { id: 'bk-007', reference: 'EZR-S1T2U3', customer: { name: 'Fatima Hassan', email: 'fatima@example.com', phone: '+254778901234', avatar: 'FH' }, service: 'Swimming Pool', resource: 'Lane 3', staff: 'Coach Ali', startAt: '2026-03-10T07:00:00Z', endAt: '2026-03-10T08:00:00Z', status: 'CANCELLED', amount: 2500, paymentMethod: 'MPESA', mpesaRef: 'QJK345STU', createdAt: '2026-03-07T10:00:00Z' },
   { id: 'bk-008', reference: 'EZR-V4W5X6', customer: { name: 'Samuel Njoroge', email: 'samuel@example.com', phone: '+254789012345', avatar: 'SN' }, service: 'Banquet Hall', resource: 'Banquet Suite', staff: 'Rose A.', startAt: '2026-03-20T18:00:00Z', endAt: '2026-03-20T23:00:00Z', status: 'CONFIRMED', amount: 65000, paymentMethod: 'MPESA', mpesaRef: 'QJK678VWX', createdAt: '2026-03-05T14:00:00Z' },
+  { id: 'bk-009', reference: 'EZR-M9N0P1', customer: { name: 'Wanjiku Thuo', email: 'wanjiku@example.com', phone: '+254798001122', avatar: 'WT' }, service: 'Salon & Spa', resource: 'Suite 2', staff: 'Grace M.', startAt: '2026-03-09T14:00:00Z', endAt: '2026-03-09T15:30:00Z', status: 'COMPLETED', amount: 4200, paymentMethod: 'MPESA', mpesaRef: 'QJKM9N0P', createdAt: '2026-03-09T16:00:00Z' },
 ]
 
 export const MOCK_TRANSACTIONS: Transaction[] = [

@@ -2,14 +2,15 @@
 
 export type PriceRow = { item: string; duration: string; price: number }
 
+/** Must match ezra-web `src/lib/service-prices.ts` for demo parity. */
 export const SERVICE_STARTING_PRICE_KES: Record<string, number> = {
-  'salon-spa': 1500,
-  barbershop: 800,
+  'salon-spa': 1800,
+  barbershop: 850,
   gym: 1200,
-  boardroom: 5000,
+  boardroom: 4500,
   ballroom: 85000,
-  'banquet-hall': 45000,
-  'swimming-pool': 2500,
+  'banquet-hall': 35000,
+  'swimming-pool': 2200,
 }
 
 export const PRICING_BY_SERVICE: Record<string, PriceRow[]> = {

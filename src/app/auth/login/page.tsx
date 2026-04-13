@@ -11,6 +11,7 @@ import { defaultHomeForRole, resolveRoleFromEmail, type PortalRole } from '@/lib
 const QUICK_ROLES: { label: string; email: string; role: PortalRole }[] = [
   { label: 'STAFF', email: 'staff@ezraannex.com', role: 'STAFF' },
   { label: 'MANAGER', email: 'manager@ezraannex.com', role: 'MANAGER' },
+  { label: 'SECRETARY', email: 'frontdesk@ezraannex.com', role: 'SECRETARY' },
   { label: 'ADMIN', email: 'admin@ezraannex.com', role: 'SUPER_ADMIN' },
   { label: 'FINANCE', email: 'finance@ezraannex.com', role: 'FINANCE' },
 ]

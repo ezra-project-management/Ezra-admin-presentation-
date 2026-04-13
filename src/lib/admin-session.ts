@@ -26,7 +26,14 @@ export function getSessionEmail(): string {
 export function getSessionRole(): PortalRole | null {
   if (typeof window === 'undefined') return null
   const raw = localStorage.getItem(ROLE_KEY) as PortalRole | null
-  if (raw === 'SUPER_ADMIN' || raw === 'MANAGER' || raw === 'STAFF' || raw === 'FINANCE') return raw
+  if (
+    raw === 'SUPER_ADMIN' ||
+    raw === 'MANAGER' ||
+    raw === 'SECRETARY' ||
+    raw === 'STAFF' ||
+    raw === 'FINANCE'
+  )
+    return raw
   const email = getSessionEmail()
   return email ? resolveRoleFromEmail(email) : null
 }
