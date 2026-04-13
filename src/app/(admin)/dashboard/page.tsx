@@ -20,9 +20,6 @@ export default function DashboardPage() {
     if (r === 'FINANCE') {
       router.replace('/finance')
     }
-    if (r === 'SECRETARY') {
-      router.replace('/secretary')
-    }
     setEmail(e)
     setRole(r)
   }, [router])
@@ -39,14 +36,6 @@ export default function DashboardPage() {
     return (
       <div className="min-h-[40vh] flex items-center justify-center text-sm text-gray-500">
         Opening finance desk…
-      </div>
-    )
-  }
-
-  if (role === 'SECRETARY') {
-    return (
-      <div className="min-h-[40vh] flex items-center justify-center text-sm text-gray-500">
-        Opening front desk…
       </div>
     )
   }

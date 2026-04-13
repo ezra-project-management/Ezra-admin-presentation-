@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { MessageSquare, Send, ChevronDown, ChevronUp } from 'lucide-react'
+import { Bot, Send, ChevronDown, ChevronUp } from 'lucide-react'
 import { PRICING_BY_SERVICE, SERVICE_STARTING_PRICE_KES } from '@/lib/service-pricing'
 
 function pricingLinesForPrompt(): string {
@@ -35,10 +35,10 @@ const QUICK_ACTIONS = [
 const initialMessage: Message = {
   id: '1',
   role: 'ai',
-  text: "Morning — ask about today’s grid, who’s on shift, rough prices from the menu, or how to handle a cancellation. What should we look at first?",
+  text: "Good day! I'm your Ezra Annex operations assistant. I can help you manage schedules, block staff time, check bookings, handle cancellations, and pull reports. What do you need?",
 }
 
-const SYSTEM_PROMPT = `You are the Ezra Annex operations guide (demo admin). Today is Thursday March 12 2026. Working hours: 6am–10pm daily.
+const SYSTEM_PROMPT = `You are the Ezra Annex operations assistant (demo admin). Today is Thursday March 12 2026. Working hours: 6am–10pm daily.
 
 Services: Salon & Spa, Barbershop, Fitness Centre, Meeting Rooms, Ballroom, Banquet Hall, Swimming Pool Training.
 
@@ -120,11 +120,11 @@ export function AdminAIPanel() {
     <div className="flex flex-col h-full bg-slate-900 overflow-hidden">
       <div className="flex items-center gap-3 px-4 py-3 bg-slate-950 border-b border-slate-700/80">
         <div className="w-8 h-8 rounded-md bg-slate-700 flex items-center justify-center border border-slate-600/80">
-          <MessageSquare className="w-4 h-4 text-slate-200" />
+          <Bot className="w-4 h-4 text-slate-200" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-300">Quick answers</p>
-          <p className="text-[11px] text-slate-500 truncate">Schedules · bookings · menu prices · demo</p>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-300">Assistant</p>
+          <p className="text-[11px] text-slate-500 truncate">Operations queries · demo</p>
         </div>
         <button
           type="button"
@@ -160,7 +160,7 @@ export function AdminAIPanel() {
                     msg.role === 'ai' ? 'bg-slate-800 border-slate-600' : 'bg-brand border-brand'
                   }`}
                 >
-                  {msg.role === 'ai' ? <MessageSquare className="w-3 h-3 text-slate-300" /> : <span className="text-[10px] text-white font-medium">You</span>}
+                  {msg.role === 'ai' ? <Bot className="w-3 h-3 text-slate-300" /> : <span className="text-[10px] text-white font-medium">You</span>}
                 </div>
                 <div
                   className={`max-w-[82%] px-3 py-2 rounded-md text-[12px] leading-relaxed whitespace-pre-wrap ${
@@ -175,7 +175,7 @@ export function AdminAIPanel() {
             {isTyping && (
               <div className="flex gap-2">
                 <div className="w-6 h-6 rounded-md bg-slate-800 border border-slate-600 flex items-center justify-center">
-                  <MessageSquare className="w-3 h-3 text-slate-400" />
+                  <Bot className="w-3 h-3 text-slate-400" />
                 </div>
                 <div className="px-3 py-2 rounded-md bg-slate-800/80 border border-slate-700 flex gap-1.5 items-center">
                   {[0, 1, 2].map(i => (

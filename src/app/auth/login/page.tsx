@@ -11,7 +11,6 @@ import { defaultHomeForRole, resolveRoleFromEmail, type PortalRole } from '@/lib
 const QUICK_ROLES: { label: string; email: string; role: PortalRole }[] = [
   { label: 'STAFF', email: 'staff@ezraannex.com', role: 'STAFF' },
   { label: 'MANAGER', email: 'manager@ezraannex.com', role: 'MANAGER' },
-  { label: 'DESK', email: 'secretary@ezraannex.com', role: 'SECRETARY' },
   { label: 'ADMIN', email: 'admin@ezraannex.com', role: 'SUPER_ADMIN' },
   { label: 'FINANCE', email: 'finance@ezraannex.com', role: 'FINANCE' },
 ]
@@ -60,7 +59,7 @@ export default function LoginPage() {
               </div>
             </div>
             <p className="text-[13px] text-slate-600 leading-relaxed">
-              Use your work email. Each role opens a different slice of the building — floor, desk, back office, or full control.
+              Use your work email. Access is limited by role — staff, managers, finance, and administrators see different tools.
             </p>
           </div>
 
@@ -109,7 +108,7 @@ export default function LoginPage() {
 
             <div>
               <p className="text-[11px] font-medium text-slate-500 uppercase tracking-wide mb-2">Demo role presets</p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 {QUICK_ROLES.map(r => (
                   <button
                     key={r.label}

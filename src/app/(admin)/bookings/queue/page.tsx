@@ -1,14 +1,11 @@
 'use client'
 
-import { useState, useEffect, useMemo, useLayoutEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Plus, Clock, Check, X, ChevronRight } from 'lucide-react'
 import { toast } from 'sonner'
 import { WALK_IN_QUEUE, MOCK_STAFF, type QueueItem } from '@/lib/mock-data'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { cn } from '@/lib/utils'
-import { getSessionRole } from '@/lib/admin-session'
-import type { PortalRole } from '@/lib/roles'
-import { canViewGuestIdentity } from '@/lib/client-privacy'
 
 function getWaitTime(addedAt: string): string {
   const diff = Date.now() - new Date(addedAt).getTime()
@@ -26,19 +23,12 @@ export default function QueuePage() {
   const [newService, setNewService] = useState('Haircut')
   const [, setTick] = useState(0)
   const [staffPick, setStaffPick] = useState<Record<string, string>>({})
-  const [portalRole, setPortalRole] = useState<PortalRole | null>(null)
-
-  useLayoutEffect(() => {
-    setPortalRole(getSessionRole())
-  }, [])
-
-  const showGuestIdentity = canViewGuestIdentity(portalRole)
 
   const barberStaff = useMemo(
     () => MOCK_STAFF.filter(s => s.departments.includes('barbershop')),
     []
   )
-  const defaultBarber = barberStaff[0]?.bookingAttribution ?? 'Tony B.'
+  const defaultBarber = barberStaff[0]?.name ?? 'Tony Baraka'
 
   useEffect(() => {
     const interval = setInterval(() => setTick(t => t + 1), 30000)
@@ -94,14 +84,7 @@ export default function QueuePage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <PageHeader
-        title="Walk-in queue"
-        subtitle={
-          showGuestIdentity
-            ? 'Barbershop · names and phones stay at the desk'
-            : 'Barbershop · you see line order only — guest details stay with front desk'
-        }
-      />
+      <PageHeader title="Walk-in queue" subtitle="Barbershop · numbered line, one clear action per guest" />
 
       <div className="grid grid-cols-3 gap-3 mb-6">
         <div className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-center shadow-sm">
@@ -120,19 +103,17 @@ export default function QueuePage() {
 
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-sm font-semibold text-gray-900">Line ({waiting.length})</h2>
-        {showGuestIdentity && (
-          <button
-            type="button"
-            onClick={() => setShowAdd(s => !s)}
-            className="inline-flex items-center gap-1.5 text-sm font-medium bg-brand text-white px-3 py-2 rounded-[var(--btn-radius)] hover:bg-brand-light"
-          >
-            <Plus className="w-4 h-4" />
-            Add walk-in
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={() => setShowAdd(s => !s)}
+          className="inline-flex items-center gap-1.5 text-sm font-medium bg-brand text-white px-3 py-2 rounded-[var(--btn-radius)] hover:bg-brand-light"
+        >
+          <Plus className="w-4 h-4" />
+          Add walk-in
+        </button>
       </div>
 
-      {showAdd && showGuestIdentity && (
+      {showAdd && (
         <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4 space-y-3 shadow-sm">
           <div className="grid sm:grid-cols-2 gap-3">
             <input
@@ -184,9 +165,7 @@ export default function QueuePage() {
                 className="flex flex-col sm:flex-row sm:items-center gap-3 rounded-xl border-2 border-blue-200 bg-blue-50/50 p-4"
               >
                 <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-gray-900">
-                    {showGuestIdentity ? item.customerName : `Walk-in ${inService.indexOf(item) + 1}`}
-                  </div>
+                  <div className="font-semibold text-gray-900">{item.customerName}</div>
                   <div className="text-xs text-gray-500">{item.service}</div>
                   {item.assignedStaff && (
                     <div className="text-xs text-blue-800 font-medium mt-1">With {item.assignedStaff}</div>
@@ -216,12 +195,8 @@ export default function QueuePage() {
                 <div className="flex items-start gap-3 flex-1 min-w-0">
                   <span className="text-xl font-bold font-mono text-navy w-8 shrink-0">#{i + 1}</span>
                   <div className="min-w-0">
-                    <div className="font-medium text-gray-900">
-                      {showGuestIdentity ? item.customerName : `Walk-in ${i + 1}`}
-                    </div>
-                    <div className="text-xs text-gray-400">
-                      {showGuestIdentity ? item.phone || '—' : '—'}
-                    </div>
+                    <div className="font-medium text-gray-900">{item.customerName}</div>
+                    <div className="text-xs text-gray-400">{item.phone || '—'}</div>
                     <div className="flex flex-wrap items-center gap-2 mt-1.5">
                       <span className="text-[11px] bg-amber-50 text-amber-800 px-2 py-0.5 rounded-full">{item.service}</span>
                       <span className="text-[11px] text-gray-500 inline-flex items-center gap-1">
@@ -238,7 +213,7 @@ export default function QueuePage() {
                     className="text-sm border border-gray-200 rounded-[var(--input-radius)] px-2 py-2 bg-white"
                   >
                     {barberStaff.map(s => (
-                      <option key={s.id} value={s.bookingAttribution}>
+                      <option key={s.id} value={s.name}>
                         {s.name}
                       </option>
                     ))}
@@ -272,9 +247,9 @@ export default function QueuePage() {
         <div className="mt-6">
           <h2 className="text-sm font-semibold text-gray-500 mb-2">Recently completed</h2>
           <ul className="text-sm text-gray-600 space-y-1">
-            {done.map((item, di) => (
+            {done.map(item => (
               <li key={item.id} className={cn('flex justify-between gap-2', 'opacity-75')}>
-                <span>{showGuestIdentity ? item.customerName : `Walk-in (done ${di + 1})`}</span>
+                <span>{item.customerName}</span>
                 <span className="text-gray-400 text-xs">{item.assignedStaff ?? '—'}</span>
               </li>
             ))}

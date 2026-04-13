@@ -8,7 +8,6 @@ import { StatusBadge } from '@/components/ui/StatusBadge'
 import { MOCK_BOOKINGS, type StaffMember } from '@/lib/mock-data'
 import { filterBookingsForStaffMember } from '@/lib/staff-bookings'
 import { formatCurrency, formatDateTime } from '@/lib/utils'
-import { buildClientOrdinalMap, guestDisplayName } from '@/lib/client-privacy'
 import { CalendarDays, Clock, XCircle, ArrowRight } from 'lucide-react'
 
 type StaffDashboardProps = {
@@ -16,7 +15,6 @@ type StaffDashboardProps = {
 }
 
 export function StaffDashboard({ profile }: StaffDashboardProps) {
-  const ordinalMap = useMemo(() => buildClientOrdinalMap(MOCK_BOOKINGS), [])
   const mine = useMemo(() => filterBookingsForStaffMember(MOCK_BOOKINGS, profile), [profile])
   const upcoming = useMemo(
     () =>
@@ -31,7 +29,7 @@ export function StaffDashboard({ profile }: StaffDashboardProps) {
     <div>
       <PageHeader
         title={`Hi, ${profile.name.split(' ')[0]}`}
-        subtitle="Your sessions only — check people in, wrap up, or cancel when needed"
+        subtitle="Your assigned sessions only — check guests in, complete, or cancel when needed"
         actions={
           <Link
             href="/bookings"
@@ -47,7 +45,7 @@ export function StaffDashboard({ profile }: StaffDashboardProps) {
         <span className="font-medium text-slate-900">Access scope · Staff</span>
         <span className="text-slate-600">
           {' '}
-          — Only sessions assigned to you (or the full demo sample if you use the generic staff login). Guest names show as Client 1, Client 2 by day so contact details stay at the desk. Revenue totals, other providers&apos; calendars,
+          — Only sessions assigned to you (or the full demo sample if you use the generic staff login). Revenue totals, other providers&apos; calendars,
           and user administration are not shown.
         </span>
       </div>
@@ -99,9 +97,7 @@ export function StaffDashboard({ profile }: StaffDashboardProps) {
             {upcoming.slice(0, 8).map(b => (
               <li key={b.id} className="px-4 py-3 flex flex-wrap items-center justify-between gap-2 hover:bg-gray-50">
                 <div>
-                  <div className="text-sm font-medium text-gray-900">
-                    {guestDisplayName(b, 'STAFF', ordinalMap)}
-                  </div>
+                  <div className="text-sm font-medium text-gray-900">{b.customer.name}</div>
                   <div className="text-xs text-gray-500">
                     {b.service} · {b.resource}
                   </div>

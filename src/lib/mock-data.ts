@@ -75,7 +75,6 @@ export const DEMO_STAFF_CREDENTIALS: { name: string; email: string; role: string
   { name: 'Coach Ali Hassan', email: 'ali.h@ezraannex.com', role: 'Staff', departments: 'Swimming Pool' },
   { name: 'Rose Adhiambo', email: 'rose.a@ezraannex.com', role: 'Staff', departments: 'Banquet Hall, Ballroom' },
   { name: 'Finance Desk', email: 'finance@ezraannex.com', role: 'Finance', departments: 'Accounts' },
-  { name: 'Mary Akinyi', email: 'secretary@ezraannex.com', role: 'Front desk', departments: 'Reception' },
 ]
 
 export interface OccupancyItem {

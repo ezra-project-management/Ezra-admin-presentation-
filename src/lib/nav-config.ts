@@ -182,46 +182,6 @@ export function filterNavGroups(role: PortalRole, email: string): NavGroup[] {
     ]
   }
 
-  if (role === 'SECRETARY') {
-    return [
-      {
-        label: 'FRONT DESK',
-        items: [
-          { label: 'Overview', href: '/secretary', icon: LayoutDashboard },
-          {
-            label: 'Bookings',
-            href: '/bookings',
-            icon: CalendarDays,
-            children: [
-              { label: 'All bookings', href: '/bookings' },
-              { label: 'Calendar', href: '/bookings/calendar' },
-              { label: 'Walk-in queue', href: '/bookings/queue' },
-            ],
-          },
-          { label: 'Customers', href: '/customers', icon: Users },
-          {
-            label: 'Staff',
-            href: '/staff',
-            icon: UserCheck,
-            children: [
-              { label: 'Staff list', href: '/staff' },
-              { label: 'Schedule', href: '/staff/schedule' },
-            ],
-          },
-          {
-            label: 'Communications',
-            href: '/communications/sms',
-            icon: MessageSquare,
-            children: [
-              { label: 'SMS centre', href: '/communications/sms' },
-              { label: 'Templates', href: '/communications/templates' },
-            ],
-          },
-        ],
-      },
-    ]
-  }
-
   return NAV_GROUPS_FULL.map(group => {
     const items = group.items.map(i => filterNavItem(role, email, i)).filter(Boolean) as NavItem[]
     return { ...group, items }
@@ -229,7 +189,7 @@ export function filterNavGroups(role: PortalRole, email: string): NavGroup[] {
 }
 
 export function filterServiceBubbles(role: PortalRole, email: string) {
-  if (role === 'FINANCE' || role === 'SECRETARY') return []
+  if (role === 'FINANCE') return []
   if (role !== 'STAFF') return SERVICE_BUBBLES
   const allowed = getStaffProfileByEmail(email)?.departments ?? []
   return SERVICE_BUBBLES.filter(b => allowed.includes(b.slug))

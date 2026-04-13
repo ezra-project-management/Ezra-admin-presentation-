@@ -19,22 +19,11 @@ type BookingFiltersProps = {
   staffOptions: string[]
   /** Staff role: hide provider filter (already scoped to you). */
   hideStaffFilter?: boolean
-  /** Floor staff: hide guest picker (labels are Client 1, … — use search instead). */
-  hideCustomerFilter?: boolean
-  searchPlaceholder?: string
 }
 
 const SERVICES = ['Salon & Spa', 'Boardroom', 'Ballroom', 'Gym', 'Barbershop', 'Swimming Pool', 'Banquet Hall']
 
-export function BookingFilters({
-  values,
-  onChange,
-  customerOptions,
-  staffOptions,
-  hideStaffFilter,
-  hideCustomerFilter,
-  searchPlaceholder = 'Reference, customer, phone…',
-}: BookingFiltersProps) {
+export function BookingFilters({ values, onChange, customerOptions, staffOptions, hideStaffFilter }: BookingFiltersProps) {
   const patch = (partial: Partial<BookingsFilterValues>) => onChange({ ...values, ...partial })
 
   const clearFilters = () => {
@@ -55,7 +44,7 @@ export function BookingFilters({
     values.status ||
     values.dateFrom ||
     values.dateTo ||
-    (!hideCustomerFilter && values.customer) ||
+    values.customer ||
     values.staff
 
   return (
@@ -65,26 +54,24 @@ export function BookingFilters({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder={searchPlaceholder}
+            placeholder="Reference, customer, phone…"
             value={values.search}
             onChange={e => patch({ search: e.target.value })}
             className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-[var(--input-radius)] focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
           />
         </div>
-        {!hideCustomerFilter && (
-          <select
-            value={values.customer}
-            onChange={e => patch({ customer: e.target.value })}
-            className="text-sm border border-gray-200 rounded-[var(--input-radius)] px-3 py-2 text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand/20 min-w-[160px]"
-          >
-            <option value="">All guests</option>
-            {customerOptions.map(c => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        )}
+        <select
+          value={values.customer}
+          onChange={e => patch({ customer: e.target.value })}
+          className="text-sm border border-gray-200 rounded-[var(--input-radius)] px-3 py-2 text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand/20 min-w-[160px]"
+        >
+          <option value="">All customers</option>
+          {customerOptions.map(c => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
         {!hideStaffFilter && (
           <select
             value={values.staff}

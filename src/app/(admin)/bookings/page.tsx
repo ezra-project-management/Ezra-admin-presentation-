@@ -15,12 +15,6 @@ import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Avatar } from '@/components/ui/Avatar'
 import { BookingFilters, DEFAULT_BOOKING_FILTERS, type BookingsFilterValues } from '@/components/bookings/BookingFilters'
 import { BookingDetailDrawer } from '@/components/bookings/BookingDetailDrawer'
-import {
-  buildClientOrdinalMap,
-  guestAvatarSeed,
-  guestDisplayName,
-  guestDisplayPhone,
-} from '@/lib/client-privacy'
 
 const SERVICE_COLORS: Record<string, string> = {
   'Salon & Spa': 'bg-teal-500',
@@ -34,32 +28,15 @@ const SERVICE_COLORS: Record<string, string> = {
 
 type ViewMode = 'table' | 'byCustomer' | 'byStaff'
 
-function matchesFilters(
-  booking: Booking,
-  f: BookingsFilterValues,
-  portalRole: PortalRole | null,
-  ordinalMap: Map<string, number>
-): boolean {
+function matchesFilters(booking: Booking, f: BookingsFilterValues): boolean {
   const q = f.search.trim().toLowerCase()
   if (q) {
-    if (portalRole === 'STAFF') {
-      const blob = `${booking.reference} ${booking.service} ${booking.staff} ${booking.status} ${guestDisplayName(booking, portalRole, ordinalMap)}`.toLowerCase()
-      if (!blob.includes(q)) return false
-    } else {
-      const blob =
-        `${booking.reference} ${booking.customer.name} ${booking.customer.phone} ${booking.customer.email} ${booking.service} ${booking.staff}`.toLowerCase()
-      if (!blob.includes(q)) return false
-    }
+    const blob = `${booking.reference} ${booking.customer.name} ${booking.customer.phone} ${booking.customer.email}`.toLowerCase()
+    if (!blob.includes(q)) return false
   }
   if (f.service && booking.service !== f.service) return false
   if (f.status && booking.status !== f.status) return false
-  if (f.customer) {
-    if (portalRole === 'STAFF') {
-      if (guestDisplayName(booking, portalRole, ordinalMap) !== f.customer) return false
-    } else if (booking.customer.name !== f.customer) {
-      return false
-    }
-  }
+  if (f.customer && booking.customer.name !== f.customer) return false
   if (f.staff && booking.staff !== f.staff) return false
   if (f.dateFrom) {
     const start = new Date(booking.startAt)
@@ -76,29 +53,22 @@ function matchesFilters(
 
 function BookingRow({
   booking,
-  portalRole,
-  ordinalMap,
   onOpen,
   onStatusChange,
 }: {
   booking: Booking
-  portalRole: PortalRole | null
-  ordinalMap: Map<string, number>
   onOpen: (b: Booking) => void
   onStatusChange: (id: string, status: string) => void
 }) {
-  const gName = guestDisplayName(booking, portalRole, ordinalMap)
-  const gPhone = guestDisplayPhone(booking, portalRole)
-  const av = guestAvatarSeed(booking, portalRole, ordinalMap)
   return (
     <tr className="hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => onOpen(booking)}>
       <td className="px-4 py-3 font-mono text-xs text-gray-500">{booking.reference}</td>
       <td className="px-4 py-3">
         <div className="flex items-center gap-2">
-          <Avatar name={av} size="sm" />
+          <Avatar name={booking.customer.name} size="sm" />
           <div>
-            <div className="text-sm font-medium text-gray-900">{gName}</div>
-            <div className="text-xs text-gray-400">{gPhone}</div>
+            <div className="text-sm font-medium text-gray-900">{booking.customer.name}</div>
+            <div className="text-xs text-gray-400">{booking.customer.phone}</div>
           </div>
         </div>
       </td>
@@ -133,7 +103,7 @@ function BookingRow({
             <button
               onClick={() => {
                 onStatusChange(booking.id, 'CHECKED_IN')
-                toast.success(`${gName} checked in`)
+                toast.success(`${booking.customer.name} checked in`)
               }}
               className="p-1.5 text-gray-400 hover:text-green-600 rounded"
               aria-label="Check in"
@@ -184,12 +154,6 @@ export default function BookingsPage() {
     }
   }, [portalRole, viewMode])
 
-  useEffect(() => {
-    if (portalRole === 'STAFF') {
-      setFilters(f => (f.customer ? { ...f, customer: '' } : f))
-    }
-  }, [portalRole])
-
   const poolBookings = useMemo(() => {
     if (portalRole === 'STAFF') {
       if (!staffProfile) return []
@@ -200,35 +164,26 @@ export default function BookingsPage() {
 
   const isStaffPortal = portalRole === 'STAFF'
 
-  const ordinalMap = useMemo(() => buildClientOrdinalMap(bookings), [bookings])
-
-  const customerOptions = useMemo(() => {
-    if (portalRole === 'STAFF') {
-      return [...new Set(poolBookings.map(b => guestDisplayName(b, portalRole, ordinalMap)))].sort((a, b) =>
-        a.localeCompare(b, undefined, { numeric: true })
-      )
-    }
-    return [...new Set(poolBookings.map(b => b.customer.name))].sort((a, b) => a.localeCompare(b))
-  }, [poolBookings, portalRole, ordinalMap])
+  const customerOptions = useMemo(
+    () => [...new Set(poolBookings.map(b => b.customer.name))].sort((a, b) => a.localeCompare(b)),
+    [poolBookings]
+  )
   const staffOptions = useMemo(
     () => [...new Set(poolBookings.map(b => b.staff))].sort((a, b) => a.localeCompare(b)),
     [poolBookings]
   )
 
-  const filtered = useMemo(
-    () => poolBookings.filter(b => matchesFilters(b, filters, portalRole, ordinalMap)),
-    [poolBookings, filters, portalRole, ordinalMap]
-  )
+  const filtered = useMemo(() => poolBookings.filter(b => matchesFilters(b, filters)), [poolBookings, filters])
 
   const byCustomer = useMemo(() => {
     const map = new Map<string, Booking[]>()
     for (const b of filtered) {
-      const k = guestDisplayName(b, portalRole, ordinalMap)
+      const k = b.customer.name
       if (!map.has(k)) map.set(k, [])
       map.get(k)!.push(b)
     }
-    return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0], undefined, { numeric: true }))
-  }, [filtered, portalRole, ordinalMap])
+    return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]))
+  }, [filtered])
 
   const byStaff = useMemo(() => {
     const map = new Map<string, Booking[]>()
@@ -253,11 +208,11 @@ export default function BookingsPage() {
   const viewTabs: { id: ViewMode; label: string; icon: typeof LayoutList }[] = isStaffPortal
     ? [
         { id: 'table', label: 'My sessions', icon: LayoutList },
-        { id: 'byCustomer', label: 'By guest', icon: Users },
+        { id: 'byCustomer', label: 'By customer', icon: Users },
       ]
     : [
         { id: 'table', label: 'All', icon: LayoutList },
-        { id: 'byCustomer', label: 'By guest', icon: Users },
+        { id: 'byCustomer', label: 'By customer', icon: Users },
         { id: 'byStaff', label: 'By staff', icon: UserCircle },
       ]
 
@@ -319,10 +274,6 @@ export default function BookingsPage() {
         customerOptions={customerOptions}
         staffOptions={staffOptions}
         hideStaffFilter={isStaffPortal}
-        hideCustomerFilter={isStaffPortal}
-        searchPlaceholder={
-          isStaffPortal ? 'Reference, service, guest label (Client 1…)…' : 'Reference, guest name, phone…'
-        }
       />
 
       {viewMode === 'table' && (
@@ -332,9 +283,7 @@ export default function BookingsPage() {
               <thead>
                 <tr className="bg-gray-50/80 border-b border-gray-100">
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Reference</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    {isStaffPortal ? 'Guest' : 'Guest / name'}
-                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Staff</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Service</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Date & Time</th>
@@ -353,14 +302,7 @@ export default function BookingsPage() {
                   </tr>
                 ) : (
                   filtered.map(booking => (
-                    <BookingRow
-                      key={booking.id}
-                      booking={booking}
-                      portalRole={portalRole}
-                      ordinalMap={ordinalMap}
-                      onOpen={openDrawer}
-                      onStatusChange={handleStatusChange}
-                    />
+                    <BookingRow key={booking.id} booking={booking} onOpen={openDrawer} onStatusChange={handleStatusChange} />
                   ))
                 )}
               </tbody>
@@ -396,7 +338,7 @@ export default function BookingsPage() {
             byCustomer.map(([name, list]) => (
               <div key={name} className="bg-white rounded-[10px] border border-gray-100 shadow-[var(--shadow-card)] overflow-hidden">
                 <div className="px-4 py-3 border-b border-gray-100 flex items-center gap-3 bg-gray-50/80">
-                  <Avatar name={isStaffPortal ? guestAvatarSeed(list[0]!, portalRole, ordinalMap) : name} size="sm" />
+                  <Avatar name={name} size="sm" />
                   <div>
                     <div className="text-sm font-semibold text-gray-900">{name}</div>
                     <div className="text-xs text-gray-500">
@@ -458,7 +400,7 @@ export default function BookingsPage() {
                     <thead>
                       <tr className="border-b border-gray-100 text-left text-[10px] font-semibold text-gray-500 uppercase">
                         <th className="px-4 py-2">Ref</th>
-                        <th className="px-4 py-2">Guest</th>
+                        <th className="px-4 py-2">Customer</th>
                         <th className="px-4 py-2">Service</th>
                         <th className="px-4 py-2">When</th>
                         <th className="px-4 py-2">Status</th>
@@ -469,9 +411,7 @@ export default function BookingsPage() {
                       {list.map(b => (
                         <tr key={b.id} className="hover:bg-gray-50 cursor-pointer" onClick={() => openDrawer(b)}>
                           <td className="px-4 py-2 font-mono text-xs text-gray-500">{b.reference}</td>
-                          <td className="px-4 py-2 text-sm text-gray-900">
-                            {guestDisplayName(b, portalRole, ordinalMap)}
-                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-900">{b.customer.name}</td>
                           <td className="px-4 py-2 text-sm text-gray-700">{b.service}</td>
                           <td className="px-4 py-2 text-sm text-gray-600">{formatDateTime(b.startAt)}</td>
                           <td className="px-4 py-2">
@@ -494,8 +434,6 @@ export default function BookingsPage() {
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
         onStatusChange={handleStatusChange}
-        portalRole={portalRole}
-        ordinalMap={ordinalMap}
       />
     </div>
   )
