@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { CalendarDays, DollarSign, Star, ImageIcon, X, ChevronLeft, ChevronRight, Save } from 'lucide-react'
 import { toast } from 'sonner'
-import { MOCK_BOOKINGS } from '@/lib/mock-data'
+import { useBookings } from '@/context/bookings-context'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { StatCard } from '@/components/ui/StatCard'
@@ -195,6 +195,7 @@ function ServiceGallery({ images }: { images: { src: string; alt: string }[] }) 
 }
 
 export default function ServicePage() {
+  const { bookings: allBookings } = useBookings()
   const params = useParams()
   const slug = params.service as string
   const displayName = serviceTitle(slug)
@@ -208,7 +209,7 @@ export default function ServicePage() {
     { label: 'Schedule', href: `/services/${slug}/schedule` },
   ]
 
-  const bookings = MOCK_BOOKINGS.filter(b => b.service === bookingServiceName).slice(0, 5)
+  const bookings = allBookings.filter((b) => b.service === bookingServiceName).slice(0, 5)
 
   return (
     <div>

@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { MOCK_BOOKINGS, OCCUPANCY_DATA } from '@/lib/mock-data'
+import { OCCUPANCY_DATA } from '@/lib/mock-data'
+import { useBookings } from '@/context/bookings-context'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { cn, formatTime } from '@/lib/utils'
 
@@ -21,12 +22,11 @@ const SERVICE_COLORS: Record<string, { bg: string; border: string }> = {
 // Map bookings to resources
 const RESOURCE_NAMES = OCCUPANCY_DATA.map(o => o.resource)
 
-function getBookingsForResource(resource: string) {
-  return MOCK_BOOKINGS.filter(b => b.resource === resource)
-}
-
 export default function CalendarPage() {
+  const { bookings } = useBookings()
   const [view, setView] = useState<'day' | 'week'>('day')
+
+  const getBookingsForResource = (resource: string) => bookings.filter((b) => b.resource === resource)
 
   return (
     <div>

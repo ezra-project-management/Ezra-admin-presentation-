@@ -95,7 +95,7 @@ export function ItemCataloguePanel({ onAddItem }: ItemCataloguePanelProps) {
             >
               <div className="text-[10px] uppercase text-gray-400 tracking-wider">{item.category}</div>
               <div className="text-sm font-medium text-gray-900 mt-0.5">{item.name}</div>
-              <div className="text-base font-bold text-gray-900 mt-1">KES {item.price.toLocaleString()}</div>
+              <div className="text-base font-bold text-gray-900 mt-1">KSh {item.price.toLocaleString()}</div>
             </button>
           ))}
         </div>

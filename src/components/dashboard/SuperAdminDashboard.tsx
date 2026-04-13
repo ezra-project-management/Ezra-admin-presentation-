@@ -9,14 +9,16 @@ import { OccupancyGrid } from '@/components/dashboard/OccupancyGrid'
 import { QuickActions } from '@/components/dashboard/QuickActions'
 import { LiveBookingFeed } from '@/components/dashboard/LiveBookingFeed'
 import { ServicePieChart } from '@/components/charts/ServicePieChart'
-import { MOCK_BOOKINGS, MOCK_CUSTOMERS } from '@/lib/mock-data'
+import { MOCK_CUSTOMERS } from '@/lib/mock-data'
+import { useBookings } from '@/context/bookings-context'
 import { formatCurrency } from '@/lib/utils'
 
 function AdminHomeDashboard({ variant }: { variant: 'super' | 'manager' }) {
+  const { bookings } = useBookings()
   const demoDay = '2026-03-10'
-  const bookingsToday = MOCK_BOOKINGS.filter((b) => b.startAt.startsWith(demoDay)).length
-  const weekRevenue = MOCK_BOOKINGS.filter((b) => b.status !== 'CANCELLED').reduce((s, b) => s + b.amount, 0)
-  const pending = MOCK_BOOKINGS.filter((b) => b.status === 'PENDING').length
+  const bookingsToday = bookings.filter((b) => b.startAt.startsWith(demoDay)).length
+  const weekRevenue = bookings.filter((b) => b.status !== 'CANCELLED').reduce((s, b) => s + b.amount, 0)
+  const pending = bookings.filter((b) => b.status === 'PENDING').length
 
   const title = variant === 'super' ? 'Operations overview' : 'Venue overview'
   const subtitle =

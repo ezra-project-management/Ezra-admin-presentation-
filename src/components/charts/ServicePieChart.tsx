@@ -7,8 +7,8 @@ import { formatCurrency } from '@/lib/utils'
 const total = REVENUE_BY_SERVICE.reduce((sum, item) => sum + item.value, 0)
 const totalLabel =
   total >= 1_000_000
-    ? `KES ${(total / 1_000_000).toFixed(2)}M`
-    : `KES ${(total / 1_000).toFixed(0)}K`
+    ? `KSh ${(total / 1_000_000).toFixed(2)}M`
+    : `KSh ${(total / 1_000).toFixed(0)}K`
 
 function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload: { service: string; value: number } }> }) {
   if (!active || !payload?.[0]) return null

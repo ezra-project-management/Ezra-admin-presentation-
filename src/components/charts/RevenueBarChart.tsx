@@ -10,7 +10,7 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
       <p className="text-sm font-medium text-gray-900 mb-1">{label}</p>
       {payload.map((entry, i) => (
         <p key={i} className="text-xs" style={{ color: entry.color }}>
-          {entry.name}: KES {entry.value.toLocaleString()}
+          {entry.name}: KSh {entry.value.toLocaleString()}
         </p>
       ))}
     </div>

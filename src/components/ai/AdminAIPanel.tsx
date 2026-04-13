@@ -6,11 +6,11 @@ import { PRICING_BY_SERVICE, SERVICE_STARTING_PRICE_KES } from '@/lib/service-pr
 
 function pricingLinesForPrompt(): string {
   const starts = Object.entries(SERVICE_STARTING_PRICE_KES)
-    .map(([slug, n]) => `• ${slug.replace(/-/g, ' ')}: from KES ${n.toLocaleString()}`)
+    .map(([slug, n]) => `• ${slug.replace(/-/g, ' ')}: from KSh ${n.toLocaleString()}`)
     .join('\n')
   const menus = Object.entries(PRICING_BY_SERVICE)
     .map(([slug, rows]) => {
-      const bits = rows.map((r) => `${r.item} ${r.duration} KES ${r.price.toLocaleString()}`).join('; ')
+      const bits = rows.map((r) => `${r.item} ${r.duration} KSh ${r.price.toLocaleString()}`).join('; ')
       return `• ${slug}: ${bits}`
     })
     .join('\n')
@@ -50,7 +50,7 @@ You can help with:
 - Availability checks and rough quotes using the menu above
 - Revenue questions: use plausible totals consistent with demo bookings and these price points (not zero unless nothing was sold)
 
-Example booking amounts for tone: barbershop haircut+beard KES 1,200; salon facial KES 2,500; gym day pass KES 1,200; boardroom half-day KES 12,000; pool lane KES 2,500.
+Example booking amounts for tone: barbershop haircut+beard KSh 1,200; salon facial KSh 2,500; gym day pass KSh 1,200; boardroom half-day KSh 12,000; pool lane KSh 2,500.
 
 Keep responses concise, clear, and professional.`
 

@@ -31,7 +31,8 @@ export function BookingDetailDrawer({ booking, open, onOpenChange, onStatusChang
 
   const handleCancel = () => {
     onStatusChange?.(booking.id, 'CANCELLED')
-    toast.error('Booking cancelled')
+    toast.success('Cancellation recorded')
+    onOpenChange(false)
   }
 
   const startDate = new Date(booking.startAt)

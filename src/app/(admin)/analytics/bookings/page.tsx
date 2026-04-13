@@ -19,7 +19,7 @@ export default function BookingTrendsPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard title="Total This Month" value="42" icon={CalendarDays} iconColor="text-blue-600" iconBg="bg-blue-50" accentColor="bg-blue-500" delta="+8 vs last month" deltaType="positive" />
         <StatCard title="Cancellation Rate" value="4.2%" icon={XCircle} iconColor="text-red-600" iconBg="bg-red-50" accentColor="bg-red-500" delta="-1.3% improvement" deltaType="positive" />
-        <StatCard title="Avg Booking Value" value="KES 12,500" icon={DollarSign} iconColor="text-green-600" iconBg="bg-green-50" accentColor="bg-green-500" delta="+5.2%" deltaType="positive" />
+        <StatCard title="Avg Booking Value" value="KSh 12,500" icon={DollarSign} iconColor="text-green-600" iconBg="bg-green-50" accentColor="bg-green-500" delta="+5.2%" deltaType="positive" />
         <StatCard title="Repeat Customers" value="68%" icon={Users} iconColor="text-purple-600" iconBg="bg-purple-50" accentColor="bg-purple-500" delta="of total bookings" deltaType="neutral" />
       </div>
 

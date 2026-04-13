@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { getSessionEmail, getSessionRole } from '@/lib/admin-session'
 import type { PortalRole } from '@/lib/roles'
 import { getStaffProfileByEmail } from '@/lib/roles'
@@ -8,13 +9,15 @@ import type { StaffMember } from '@/lib/mock-data'
 import { filterBookingsForStaffMember } from '@/lib/staff-bookings'
 import { Eye, LogIn, X, LayoutList, Users, UserCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import { MOCK_BOOKINGS, type Booking } from '@/lib/mock-data'
+import { useBookings } from '@/context/bookings-context'
+import type { Booking } from '@/lib/mock-data'
 import { formatCurrency, formatDateTime, cn } from '@/lib/utils'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Avatar } from '@/components/ui/Avatar'
 import { BookingFilters, DEFAULT_BOOKING_FILTERS, type BookingsFilterValues } from '@/components/bookings/BookingFilters'
 import { BookingDetailDrawer } from '@/components/bookings/BookingDetailDrawer'
+import { NewBookingModal } from '@/components/bookings/NewBookingModal'
 
 const SERVICE_COLORS: Record<string, string> = {
   'Salon & Spa': 'bg-teal-500',
@@ -115,7 +118,7 @@ function BookingRow({
             <button
               onClick={() => {
                 onStatusChange(booking.id, 'CANCELLED')
-                toast.error('Booking cancelled')
+                toast.success('Booking cancelled')
               }}
               className="p-1.5 text-gray-400 hover:text-red-600 rounded"
               aria-label="Cancel"
@@ -129,14 +132,18 @@ function BookingRow({
   )
 }
 
-export default function BookingsPage() {
+function BookingsPageContent() {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const { bookings, updateBookingStatus } = useBookings()
+
   const [sessionReady, setSessionReady] = useState(false)
   const [portalRole, setPortalRole] = useState<PortalRole | null>(null)
   const [staffProfile, setStaffProfile] = useState<StaffMember | null>(null)
 
-  const [bookings, setBookings] = useState<Booking[]>(MOCK_BOOKINGS)
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [newBookingOpen, setNewBookingOpen] = useState(false)
   const [filters, setFilters] = useState<BookingsFilterValues>(DEFAULT_BOOKING_FILTERS)
   const [viewMode, setViewMode] = useState<ViewMode>('table')
 
@@ -147,6 +154,13 @@ export default function BookingsPage() {
     setStaffProfile(r === 'STAFF' ? getStaffProfileByEmail(e) : null)
     setSessionReady(true)
   }, [])
+
+  useEffect(() => {
+    if (searchParams.get('new') === '1') {
+      setNewBookingOpen(true)
+      router.replace('/bookings', { scroll: false })
+    }
+  }, [searchParams, router])
 
   useEffect(() => {
     if (portalRole === 'STAFF' && viewMode === 'byStaff') {
@@ -196,7 +210,7 @@ export default function BookingsPage() {
   }, [filtered])
 
   const handleStatusChange = (bookingId: string, newStatus: string) => {
-    setBookings(prev => prev.map(b => (b.id === bookingId ? { ...b, status: newStatus } : b)))
+    updateBookingStatus(bookingId, newStatus)
     setSelectedBooking(prev => (prev && prev.id === bookingId ? { ...prev, status: newStatus } : prev))
   }
 
@@ -231,11 +245,17 @@ export default function BookingsPage() {
         subtitle={
           isStaffPortal
             ? `${filtered.length} shown · your assigned sessions only — check in, complete, or cancel`
-            : `${filtered.length} shown · ${bookings.length} total`
+            : portalRole === 'SECRETARY'
+              ? `${filtered.length} shown · ${bookings.length} total — cancel open orders from Actions (×) or the booking drawer`
+              : `${filtered.length} shown · ${bookings.length} total`
         }
         actions={
           !isStaffPortal ? (
-            <button className="bg-brand text-white px-4 py-2 rounded-[var(--btn-radius)] text-sm font-medium hover:bg-brand-light">
+            <button
+              type="button"
+              onClick={() => setNewBookingOpen(true)}
+              className="bg-brand text-white px-4 py-2 rounded-[var(--btn-radius)] text-sm font-medium hover:bg-brand-light"
+            >
               + New Booking
             </button>
           ) : undefined
@@ -435,6 +455,22 @@ export default function BookingsPage() {
         onOpenChange={setDrawerOpen}
         onStatusChange={handleStatusChange}
       />
+
+      <NewBookingModal open={newBookingOpen} onOpenChange={setNewBookingOpen} />
     </div>
+  )
+}
+
+export default function BookingsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[30vh] flex items-center justify-center text-sm text-gray-500">
+          Loading bookings…
+        </div>
+      }
+    >
+      <BookingsPageContent />
+    </Suspense>
   )
 }

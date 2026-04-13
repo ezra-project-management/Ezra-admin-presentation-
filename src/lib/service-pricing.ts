@@ -19,7 +19,7 @@ export const PRICING_BY_SERVICE: Record<string, PriceRow[]> = {
     { item: 'Express facial', duration: '45 min', price: 4500 },
   ],
   barbershop: [
-    { item: 'Haircut', duration: '45 min', price: 800 },
+    { item: 'Haircut', duration: '45 min', price: 850 },
     { item: 'Haircut and beard', duration: '60 min', price: 1200 },
   ],
   gym: [

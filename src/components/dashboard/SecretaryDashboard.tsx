@@ -1,29 +1,40 @@
 'use client'
 
 import Link from 'next/link'
-import { CalendarDays, ListOrdered } from 'lucide-react'
+import { CalendarDays, ListOrdered, PlusCircle } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { LiveBookingFeed } from '@/components/dashboard/LiveBookingFeed'
 import { StatCard } from '@/components/ui/StatCard'
-import { MOCK_BOOKINGS, WALK_IN_QUEUE } from '@/lib/mock-data'
+import { WALK_IN_QUEUE } from '@/lib/mock-data'
+import { useBookings } from '@/context/bookings-context'
 
 export function SecretaryDashboard() {
+  const { bookings } = useBookings()
   const waiting = WALK_IN_QUEUE.filter((q) => q.status === 'waiting').length
-  const today = MOCK_BOOKINGS.filter((b) => b.startAt.startsWith('2026-03-10')).length
+  const today = bookings.filter((b) => b.startAt.startsWith('2026-03-10')).length
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="Front desk"
-        subtitle="Walk-ins, arrivals, and the live booking list for today."
+        subtitle="Walk-ins, arrivals, and cancellations — same booking list as operations. Use All Bookings for full details."
         actions={
-          <Link
-            href="/bookings/queue"
-            className="inline-flex items-center gap-1.5 rounded-[var(--btn-radius)] border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-800 shadow-sm transition hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
-          >
-            <ListOrdered className="h-4 w-4" />
-            Walk-in queue
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href="/bookings?new=1"
+              className="inline-flex items-center gap-1.5 rounded-[var(--btn-radius)] bg-brand px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-light"
+            >
+              <PlusCircle className="h-4 w-4" />
+              New booking
+            </Link>
+            <Link
+              href="/bookings/queue"
+              className="inline-flex items-center gap-1.5 rounded-[var(--btn-radius)] border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-800 shadow-sm transition hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+            >
+              <ListOrdered className="h-4 w-4" />
+              Walk-in queue
+            </Link>
+          </div>
         }
       />
 

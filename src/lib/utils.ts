@@ -5,8 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+/** Kenyan Shilling — match public site (`KSh 1,800`). */
 export function formatCurrency(amount: number): string {
-  return `KES ${new Intl.NumberFormat('en-KE', { minimumFractionDigits: 0 }).format(amount)}`
+  const n = Math.round(amount)
+  return `KSh ${n.toLocaleString('en-KE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
 }
 
 export function formatDate(dateStr: string): string {

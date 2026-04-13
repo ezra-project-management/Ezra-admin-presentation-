@@ -28,10 +28,10 @@ export default function RevenuePage() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard title="Total Revenue" value="KES 910,500" icon={TrendingUp} iconColor="text-green-600" iconBg="bg-green-50" accentColor="bg-green-500" delta="+18.2%" deltaType="positive" />
-        <StatCard title="M-Pesa Revenue" value="KES 834,000" icon={Smartphone} iconColor="text-blue-600" iconBg="bg-blue-50" accentColor="bg-blue-500" delta="91.6% of total" deltaType="neutral" />
-        <StatCard title="Cash Revenue" value="KES 76,500" icon={Banknote} iconColor="text-gray-600" iconBg="bg-gray-100" accentColor="bg-gray-500" delta="8.4% of total" deltaType="neutral" />
-        <StatCard title="Pending" value="KES 24,000" icon={Clock} iconColor="text-amber-600" iconBg="bg-amber-50" accentColor="bg-amber-500" delta="3 invoices" deltaType="negative" />
+        <StatCard title="Total Revenue" value="KSh 910,500" icon={TrendingUp} iconColor="text-green-600" iconBg="bg-green-50" accentColor="bg-green-500" delta="+18.2%" deltaType="positive" />
+        <StatCard title="M-Pesa Revenue" value="KSh 834,000" icon={Smartphone} iconColor="text-blue-600" iconBg="bg-blue-50" accentColor="bg-blue-500" delta="91.6% of total" deltaType="neutral" />
+        <StatCard title="Cash Revenue" value="KSh 76,500" icon={Banknote} iconColor="text-gray-600" iconBg="bg-gray-100" accentColor="bg-gray-500" delta="8.4% of total" deltaType="neutral" />
+        <StatCard title="Pending" value="KSh 24,000" icon={Clock} iconColor="text-amber-600" iconBg="bg-amber-50" accentColor="bg-amber-500" delta="3 invoices" deltaType="negative" />
       </div>
 
       <div className="bg-white rounded-[10px] border border-gray-100 shadow-[var(--shadow-card)] p-6 mb-6">

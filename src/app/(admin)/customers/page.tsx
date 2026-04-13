@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { Search, Eye, MessageSquare, Ban, X } from 'lucide-react'
 import { toast } from 'sonner'
-import { MOCK_CUSTOMERS, MOCK_BOOKINGS, MOCK_TRANSACTIONS, type CustomerRecord } from '@/lib/mock-data'
+import { MOCK_CUSTOMERS, MOCK_TRANSACTIONS, type CustomerRecord } from '@/lib/mock-data'
+import { useBookings } from '@/context/bookings-context'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Avatar } from '@/components/ui/Avatar'
@@ -11,6 +12,7 @@ import { TierBadge } from '@/components/ui/TierBadge'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 
 export default function CustomersPage() {
+  const { bookings } = useBookings()
   const [customers, setCustomers] = useState<CustomerRecord[]>(MOCK_CUSTOMERS)
   const [search, setSearch] = useState('')
   const [tierFilter, setTierFilter] = useState('')
@@ -23,7 +25,7 @@ export default function CustomersPage() {
     return matchSearch && matchTier
   })
 
-  const customerBookings = selectedCustomer ? MOCK_BOOKINGS.filter(b => b.customer.name === selectedCustomer.name) : []
+  const customerBookings = selectedCustomer ? bookings.filter((b) => b.customer.name === selectedCustomer.name) : []
   const customerTransactions = selectedCustomer ? MOCK_TRANSACTIONS.filter(t => t.customer === selectedCustomer.name) : []
 
   const tabs = ['bookings', 'transactions', 'loyalty', 'notes', 'preferences', 'communications']

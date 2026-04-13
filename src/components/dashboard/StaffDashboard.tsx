@@ -5,7 +5,8 @@ import { useMemo } from 'react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { StatCard } from '@/components/ui/StatCard'
 import { StatusBadge } from '@/components/ui/StatusBadge'
-import { MOCK_BOOKINGS, type Booking, type StaffMember } from '@/lib/mock-data'
+import type { Booking, StaffMember } from '@/lib/mock-data'
+import { useBookings } from '@/context/bookings-context'
 import { filterBookingsForStaffMember } from '@/lib/staff-bookings'
 import { formatCurrency, formatDateTime } from '@/lib/utils'
 import { CalendarDays, Clock, XCircle, ArrowRight, Banknote, Sparkles } from 'lucide-react'
@@ -22,7 +23,8 @@ function guestLabelForStaff(b: Booking): string {
 }
 
 export function StaffDashboard({ profile }: StaffDashboardProps) {
-  const mine = useMemo(() => filterBookingsForStaffMember(MOCK_BOOKINGS, profile), [profile])
+  const { bookings } = useBookings()
+  const mine = useMemo(() => filterBookingsForStaffMember(bookings, profile), [bookings, profile])
   const upcoming = useMemo(
     () =>
       mine
