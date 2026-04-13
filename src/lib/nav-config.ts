@@ -23,6 +23,7 @@ import {
   LifeBuoy,
   Receipt,
   Wallet,
+  ConciergeBell,
 } from 'lucide-react'
 import type { PortalRole } from '@/lib/roles'
 import { canAccessPath, getStaffProfileByEmail } from '@/lib/roles'
@@ -50,6 +51,72 @@ export const SERVICE_BUBBLES = [
   { label: 'Pool', image: '/images/image-resizing-10.avif', count: 1, href: '/services/swimming-pool', slug: 'swimming-pool' as const },
   { label: 'Events', image: '/images/hero-banquet.jpeg', count: 2, href: '/services/ballroom', slug: 'ballroom' as const },
   { label: 'Board', image: '/images/image-resizing-6.avif', count: 4, href: '/services/boardroom', slug: 'boardroom' as const },
+]
+
+/** Slim sidebar for front desk: fewer sections, plain labels, no staff or system tools. */
+const SECRETARY_NAV_GROUPS: NavGroup[] = [
+  {
+    label: 'Start',
+    items: [{ label: 'Front desk home', href: '/secretary', icon: ConciergeBell }],
+  },
+  {
+    label: 'Bookings',
+    items: [
+      {
+        label: 'Bookings',
+        href: '/bookings',
+        icon: CalendarDays,
+        children: [
+          { label: 'All bookings', href: '/bookings' },
+          { label: 'Calendar', href: '/bookings/calendar' },
+          { label: 'Walk-in queue', href: '/bookings/queue' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'Sales',
+    items: [
+      {
+        label: 'Point of sale',
+        href: '/pos/new',
+        icon: ShoppingCart,
+        children: [
+          { label: 'New sale', href: '/pos/new' },
+          { label: 'Transactions', href: '/pos/transactions' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'Guests',
+    items: [{ label: 'Customers', href: '/customers', icon: Users }],
+  },
+  {
+    label: 'Outreach',
+    items: [
+      {
+        label: 'Communications',
+        href: '/communications/sms',
+        icon: MessageSquare,
+        children: [
+          { label: 'SMS centre', href: '/communications/sms' },
+          { label: 'Templates', href: '/communications/templates' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'At a glance',
+    items: [
+      { label: 'Occupancy', href: '/analytics/occupancy', icon: BarChart3 },
+      { label: 'Booking trends', href: '/analytics/bookings', icon: LineChart },
+    ],
+  },
+  {
+    label: 'Help',
+    items: [{ label: 'Support', href: '/support', icon: LifeBuoy }],
+  },
 ]
 
 const NAV_GROUPS_FULL: NavGroup[] = [
@@ -175,6 +242,10 @@ function filterNavItem(role: PortalRole, email: string, item: NavItem): NavItem 
 }
 
 export function filterNavGroups(role: PortalRole, email: string): NavGroup[] {
+  if (role === 'SECRETARY') {
+    return SECRETARY_NAV_GROUPS
+  }
+
   if (role === 'FINANCE') {
     return [
       {

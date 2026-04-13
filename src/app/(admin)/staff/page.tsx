@@ -1,12 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { LayoutGrid, List, Pencil, MessageSquare, Calendar, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { MOCK_STAFF } from '@/lib/mock-data'
 import { formatDate, cn } from '@/lib/utils'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Avatar } from '@/components/ui/Avatar'
+import { getSessionRole } from '@/lib/admin-session'
+import { canManageStaff, type PortalRole } from '@/lib/roles'
 
 const DEPT_COLORS: Record<string, string> = {
   'salon-spa': 'bg-teal-50 text-teal-700',
@@ -21,19 +23,32 @@ const DEPT_COLORS: Record<string, string> = {
 export default function StaffPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [showAddModal, setShowAddModal] = useState(false)
+  const [role, setRole] = useState<PortalRole | null>(null)
+
+  useLayoutEffect(() => {
+    setRole(getSessionRole())
+  }, [])
+
+  const showAddStaff = role != null && canManageStaff(role)
 
   return (
     <div>
       <PageHeader
         title="Staff"
-        subtitle={`${MOCK_STAFF.length} team members`}
+        subtitle={`${MOCK_STAFF.length} team members${
+          role != null && !showAddStaff ? ' · new hires are added by managers or super admins' : ''
+        }`}
         actions={
           <div className="flex items-center gap-2">
             <div className="flex border border-gray-200 rounded-[var(--btn-radius)] overflow-hidden">
               <button onClick={() => setViewMode('grid')} className={cn('p-2', viewMode === 'grid' ? 'bg-navy text-white' : 'text-gray-500 hover:bg-gray-50')} aria-label="Grid view"><LayoutGrid className="w-4 h-4" /></button>
               <button onClick={() => setViewMode('list')} className={cn('p-2', viewMode === 'list' ? 'bg-navy text-white' : 'text-gray-500 hover:bg-gray-50')} aria-label="List view"><List className="w-4 h-4" /></button>
             </div>
-            <button onClick={() => setShowAddModal(true)} className="bg-brand text-white px-4 py-2 rounded-[var(--btn-radius)] text-sm font-medium hover:bg-brand-light">+ Add Staff</button>
+            {showAddStaff && (
+              <button onClick={() => setShowAddModal(true)} className="bg-brand text-white px-4 py-2 rounded-[var(--btn-radius)] text-sm font-medium hover:bg-brand-light">
+                + Add staff
+              </button>
+            )}
           </div>
         }
       />

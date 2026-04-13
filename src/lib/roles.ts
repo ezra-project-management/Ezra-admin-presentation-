@@ -58,6 +58,11 @@ export function defaultHomeForRole(role: PortalRole): string {
   return '/dashboard'
 }
 
+/** Hiring and roster changes — managers and super admins only (not front desk). */
+export function canManageStaff(role: PortalRole): boolean {
+  return role === 'SUPER_ADMIN' || role === 'MANAGER'
+}
+
 /** Path prefixes a role may access (exact or children). */
 const PREFIXES: Record<Exclude<PortalRole, 'SUPER_ADMIN'>, string[]> = {
   MANAGER: [
@@ -74,7 +79,7 @@ const PREFIXES: Record<Exclude<PortalRole, 'SUPER_ADMIN'>, string[]> = {
     '/system/settings',
     '/system/audit-log',
   ],
-  /** Front desk: operations without finance core or system administration. */
+  /** Front desk: operations without finance core, team directory, or system administration. */
   SECRETARY: [
     '/dashboard',
     '/secretary',
@@ -82,7 +87,6 @@ const PREFIXES: Record<Exclude<PortalRole, 'SUPER_ADMIN'>, string[]> = {
     '/pos',
     '/services',
     '/customers',
-    '/staff',
     '/communications',
     '/analytics',
   ],
