@@ -20,6 +20,7 @@ import {
   Shield,
   ScrollText,
   Landmark,
+  LifeBuoy,
 } from 'lucide-react'
 import type { PortalRole } from '@/lib/roles'
 import { canAccessPath, getStaffProfileByEmail } from '@/lib/roles'
@@ -135,6 +136,7 @@ const NAV_GROUPS_FULL: NavGroup[] = [
       { label: 'Settings', href: '/system/settings', icon: Settings },
       { label: 'Users & Roles', href: '/system/users', icon: Shield },
       { label: 'Audit Log', href: '/system/audit-log', icon: ScrollText },
+      { label: 'Support', href: '/support', icon: LifeBuoy },
     ],
   },
 ]
@@ -178,6 +180,10 @@ export function filterNavGroups(role: PortalRole, email: string): NavGroup[] {
       {
         label: 'RECORDS',
         items: [{ label: 'Transactions', href: '/pos/transactions', icon: ShoppingCart }],
+      },
+      {
+        label: 'HELP',
+        items: [{ label: 'Support', href: '/support', icon: LifeBuoy }],
       },
     ]
   }

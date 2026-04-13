@@ -88,6 +88,9 @@ export function canAccessPath(role: PortalRole, pathname: string, email: string)
 
   if (role === 'SUPER_ADMIN') return true
 
+  /** Help desk — available to every signed-in portal role. */
+  if (p === '/support' || p.startsWith('/support/')) return true
+
   if (role === 'FINANCE') {
     return PREFIXES.FINANCE.some((prefix) => p === prefix || p.startsWith(prefix + '/'))
   }

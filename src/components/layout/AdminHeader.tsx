@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import * as Popover from '@radix-ui/react-popover'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { PanelLeftClose, Search, Bell, ChevronDown, User, Lock, LogOut, CalendarDays, CreditCard, AlertTriangle, Monitor } from 'lucide-react'
+import { PanelLeftClose, Search, Bell, ChevronDown, User, Lock, LogOut, CalendarDays, CreditCard, AlertTriangle, Monitor, LifeBuoy } from 'lucide-react'
 import { NOTIFICATIONS } from '@/lib/mock-data'
 import { cn } from '@/lib/utils'
 
@@ -136,6 +137,11 @@ export function AdminHeader({ onMenuClick }: AdminHeaderProps) {
             </DropdownMenu.Item>
             <DropdownMenu.Item className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer outline-none">
               <Lock className="w-4 h-4" /> Change Password
+            </DropdownMenu.Item>
+            <DropdownMenu.Item asChild>
+              <Link href="/support" className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer outline-none">
+                <LifeBuoy className="w-4 h-4" /> Support
+              </Link>
             </DropdownMenu.Item>
             <DropdownMenu.Separator className="h-px bg-gray-100 my-1" />
             <DropdownMenu.Item className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer outline-none">
