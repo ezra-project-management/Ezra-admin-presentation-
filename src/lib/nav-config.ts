@@ -21,6 +21,8 @@ import {
   ScrollText,
   Landmark,
   LifeBuoy,
+  Receipt,
+  Wallet,
 } from 'lucide-react'
 import type { PortalRole } from '@/lib/roles'
 import { canAccessPath, getStaffProfileByEmail } from '@/lib/roles'
@@ -54,6 +56,10 @@ const NAV_GROUPS_FULL: NavGroup[] = [
   {
     label: 'OVERVIEW',
     items: [{ label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard }],
+  },
+  {
+    label: 'MY PAY',
+    items: [{ label: 'My payslips', href: '/payslips', icon: Receipt }],
   },
   {
     label: 'OPERATIONS',
@@ -110,6 +116,7 @@ const NAV_GROUPS_FULL: NavGroup[] = [
     label: 'FINANCE',
     items: [
       { label: 'Finance desk', href: '/finance', icon: Landmark },
+      { label: 'Payroll roster', href: '/finance/payroll', icon: Wallet },
       { label: 'Revenue', href: '/finance/revenue', icon: TrendingUp },
       { label: 'Payments', href: '/finance/payments', icon: CreditCard },
     ],
@@ -174,6 +181,7 @@ export function filterNavGroups(role: PortalRole, email: string): NavGroup[] {
         label: 'FINANCE',
         items: [
           { label: 'Overview', href: '/finance', icon: Landmark },
+          { label: 'Payroll roster', href: '/finance/payroll', icon: Wallet },
           { label: 'Revenue', href: '/finance/revenue', icon: TrendingUp },
           { label: 'Payments', href: '/finance/payments', icon: CreditCard },
         ],

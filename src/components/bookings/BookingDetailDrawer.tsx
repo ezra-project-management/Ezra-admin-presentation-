@@ -163,6 +163,9 @@ export function BookingDetailDrawer({
           </div>
 
           {/* Actions */}
+          <p className="px-4 pt-3 text-[11px] text-gray-500 leading-relaxed bg-gray-50 border-t border-gray-100">
+            Check in when the guest arrives. Mark complete when their service ends — like a hotel or spa front desk.
+          </p>
           <div className="p-4 border-t border-gray-100 bg-gray-50 space-y-2">
             {booking.status === 'CONFIRMED' && (
               <button
