@@ -13,6 +13,27 @@ export const BOOKING_SERVICE_OPTIONS = [
 
 export type BookingServiceSlug = (typeof BOOKING_SERVICE_OPTIONS)[number]['slug']
 
+/** Meeting & event spaces — headcount and run-of-show matter for ops. */
+export const VENUE_SERVICE_SLUGS: BookingServiceSlug[] = ['boardroom', 'ballroom', 'banquet-hall']
+
+export function isVenueServiceSlug(slug: string): boolean {
+  return (VENUE_SERVICE_SLUGS as readonly string[]).includes(slug)
+}
+
+export function defaultExpectedGuestsForVenue(slug: BookingServiceSlug): number {
+  if (slug === 'boardroom') return 12
+  if (slug === 'ballroom') return 120
+  if (slug === 'banquet-hall') return 80
+  return 1
+}
+
+export function maxGuestsForVenue(slug: BookingServiceSlug): number {
+  if (slug === 'boardroom') return 40
+  if (slug === 'ballroom') return 500
+  if (slug === 'banquet-hall') return 150
+  return 999
+}
+
 export function defaultAmountForSlug(slug: BookingServiceSlug): number {
   return SERVICE_STARTING_PRICE_KES[slug] ?? 0
 }

@@ -34,6 +34,8 @@ export type CreateBookingInput = {
   amount: number
   paymentMethod: string
   mpesaRef: string | null
+  expectedGuests?: number
+  eventNotes?: string | null
 }
 
 type BookingsContextValue = {
@@ -69,6 +71,8 @@ export function BookingsProvider({ children }: { children: ReactNode }) {
       paymentMethod: input.paymentMethod,
       mpesaRef: input.mpesaRef,
       createdAt,
+      ...(input.expectedGuests != null ? { expectedGuests: input.expectedGuests } : {}),
+      ...(input.eventNotes ? { eventNotes: input.eventNotes } : {}),
     }
     setBookings((prev) => [row, ...prev])
     return row

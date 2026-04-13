@@ -8,6 +8,9 @@ import { MOCK_STAFF } from '@/lib/mock-data'
 import {
   BOOKING_SERVICE_OPTIONS,
   defaultAmountForSlug,
+  defaultExpectedGuestsForVenue,
+  isVenueServiceSlug,
+  maxGuestsForVenue,
   optionForSlug,
   type BookingServiceSlug,
 } from '@/lib/booking-service-options'
@@ -50,8 +53,11 @@ export function NewBookingModal({ open, onOpenChange }: Props) {
   const [amount, setAmount] = useState(defaultAmountForSlug('salon-spa'))
   const [payment, setPayment] = useState<'MPESA' | 'CASH' | 'PENDING'>('MPESA')
   const [mpesaRef, setMpesaRef] = useState('')
+  const [expectedGuests, setExpectedGuests] = useState(12)
+  const [eventNotes, setEventNotes] = useState('')
 
   const opt = optionForSlug(slug)
+  const venue = isVenueServiceSlug(slug)
   const staffChoices = useMemo(() => staffOptionsForSlug(slug), [slug])
 
   useEffect(() => {
@@ -61,6 +67,9 @@ export function NewBookingModal({ open, onOpenChange }: Props) {
     setAmount(defaultAmountForSlug(slug))
     const first = staffOptionsForSlug(slug)[0]
     if (first) setStaffName(first.bookingAttribution)
+    if (isVenueServiceSlug(slug)) {
+      setExpectedGuests(defaultExpectedGuestsForVenue(slug))
+    }
   }, [slug, open])
 
   useEffect(() => {
@@ -90,6 +99,8 @@ export function NewBookingModal({ open, onOpenChange }: Props) {
     setAmount(defaultAmountForSlug('salon-spa'))
     setPayment('MPESA')
     setMpesaRef('')
+    setEventNotes('')
+    setExpectedGuests(12)
   }
 
   const handleSubmit = (e: FormEvent) => {
@@ -111,6 +122,15 @@ export function NewBookingModal({ open, onOpenChange }: Props) {
     const endAt = addHoursIso(startAt, opt.durationHrs)
     const status = payment === 'PENDING' ? 'PENDING' : 'CONFIRMED'
 
+    let guestsPayload: number | undefined
+    let notesPayload: string | null = null
+    if (isVenueServiceSlug(slug)) {
+      const cap = maxGuestsForVenue(slug)
+      const g = Math.min(cap, Math.max(1, Math.round(Number(expectedGuests)) || 1))
+      guestsPayload = g
+      notesPayload = eventNotes.trim() || null
+    }
+
     const created = addBooking({
       customer: { name, email: email.trim() || `${phone.trim()}@guest.local`, phone: phone.trim() },
       service: opt.label,
@@ -122,6 +142,8 @@ export function NewBookingModal({ open, onOpenChange }: Props) {
       amount: Math.max(0, Math.round(Number(amount)) || 0),
       paymentMethod: payment,
       mpesaRef: payment === 'MPESA' && mpesaRef.trim() ? mpesaRef.trim() : null,
+      ...(guestsPayload != null ? { expectedGuests: guestsPayload } : {}),
+      ...(notesPayload ? { eventNotes: notesPayload } : {}),
     })
     toast.success(`Booking ${created.reference} created`)
     reset()
@@ -269,6 +291,34 @@ export function NewBookingModal({ open, onOpenChange }: Props) {
                   className="mt-1 w-full rounded-[var(--input-radius)] border border-gray-200 px-3 py-2 text-sm font-mono"
                   placeholder="QJK…"
                 />
+              </div>
+            )}
+
+            {venue && (
+              <div className="rounded-xl border border-amber-200/80 bg-amber-50/50 p-4 space-y-3">
+                <p className="text-xs font-semibold text-amber-950">Meeting &amp; event details</p>
+                <div>
+                  <label className="text-xs font-medium text-gray-700">Expected guests *</label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={maxGuestsForVenue(slug)}
+                    value={expectedGuests}
+                    onChange={(e) => setExpectedGuests(Number(e.target.value))}
+                    className="mt-1 w-full rounded-[var(--input-radius)] border border-gray-200 px-3 py-2 text-sm"
+                  />
+                  <p className="text-[11px] text-gray-500 mt-1">Max {maxGuestsForVenue(slug)} for this space (demo caps).</p>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-700">Setup &amp; notes</label>
+                  <textarea
+                    value={eventNotes}
+                    onChange={(e) => setEventNotes(e.target.value)}
+                    rows={3}
+                    placeholder="Layout (theatre / boardroom), AV, catering, timeline…"
+                    className="mt-1 w-full rounded-[var(--input-radius)] border border-gray-200 px-3 py-2 text-sm"
+                  />
+                </div>
               </div>
             )}
 

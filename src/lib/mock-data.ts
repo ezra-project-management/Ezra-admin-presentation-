@@ -19,6 +19,10 @@ export interface Booking {
   paymentMethod: string
   mpesaRef: string | null
   createdAt: string
+  /** Headcount for boardroom / ballroom / banquet; optional for other lines. */
+  expectedGuests?: number
+  /** Layout, catering, AV, or run-of-show notes for events & meetings. */
+  eventNotes?: string | null
 }
 
 export interface Transaction {
@@ -115,12 +119,12 @@ export interface SmsTemplate {
 
 export const MOCK_BOOKINGS: Booking[] = [
   { id: 'bk-001', reference: 'EZR-A1B2C3', customer: { name: 'Amara Kimani', email: 'amara@example.com', phone: '+254712345678', avatar: 'AK' }, service: 'Salon & Spa', resource: 'Suite 1', staff: 'Grace M.', startAt: '2026-03-10T09:00:00Z', endAt: '2026-03-10T10:30:00Z', status: 'CONFIRMED', amount: 3500, paymentMethod: 'MPESA', mpesaRef: 'QJK123ABC', createdAt: '2026-03-08T14:23:00Z' },
-  { id: 'bk-002', reference: 'EZR-D4E5F6', customer: { name: 'David Omondi', email: 'david@example.com', phone: '+254723456789', avatar: 'DO' }, service: 'Boardroom', resource: 'Board Room A', staff: 'James K.', startAt: '2026-03-10T10:00:00Z', endAt: '2026-03-10T14:00:00Z', status: 'CHECKED_IN', amount: 20000, paymentMethod: 'MPESA', mpesaRef: 'QJK456DEF', createdAt: '2026-03-09T09:15:00Z' },
-  { id: 'bk-003', reference: 'EZR-G7H8I9', customer: { name: 'Priya Mehta', email: 'priya@example.com', phone: '+254734567890', avatar: 'PM' }, service: 'Ballroom', resource: 'Grand Ballroom', staff: 'Sarah W.', startAt: '2026-03-15T16:00:00Z', endAt: '2026-03-15T23:00:00Z', status: 'CONFIRMED', amount: 120000, paymentMethod: 'MPESA', mpesaRef: 'QJK789GHI', createdAt: '2026-03-01T11:45:00Z' },
+  { id: 'bk-002', reference: 'EZR-D4E5F6', customer: { name: 'David Omondi', email: 'david@example.com', phone: '+254723456789', avatar: 'DO' }, service: 'Boardroom', resource: 'Board Room A', staff: 'James K.', startAt: '2026-03-10T10:00:00Z', endAt: '2026-03-10T14:00:00Z', status: 'CHECKED_IN', amount: 20000, paymentMethod: 'MPESA', mpesaRef: 'QJK456DEF', createdAt: '2026-03-09T09:15:00Z', expectedGuests: 14, eventNotes: 'Theatre layout · HDMI + Zoom · water station' },
+  { id: 'bk-003', reference: 'EZR-G7H8I9', customer: { name: 'Priya Mehta', email: 'priya@example.com', phone: '+254734567890', avatar: 'PM' }, service: 'Ballroom', resource: 'Grand Ballroom', staff: 'Sarah W.', startAt: '2026-03-15T16:00:00Z', endAt: '2026-03-15T23:00:00Z', status: 'CONFIRMED', amount: 120000, paymentMethod: 'MPESA', mpesaRef: 'QJK789GHI', createdAt: '2026-03-01T11:45:00Z', expectedGuests: 220, eventNotes: 'Wedding reception · dance floor · live band area' },
   { id: 'bk-004', reference: 'EZR-J1K2L3', customer: { name: 'James Waweru', email: 'james@example.com', phone: '+254745678901', avatar: 'JW' }, service: 'Gym', resource: 'Main Gym Floor', staff: 'Mike T.', startAt: '2026-03-10T06:00:00Z', endAt: '2026-03-10T07:30:00Z', status: 'COMPLETED', amount: 1200, paymentMethod: 'CASH', mpesaRef: null, createdAt: '2026-03-09T20:00:00Z' },
   { id: 'bk-006', reference: 'EZR-P7Q8R9', customer: { name: 'Brian Mutua', email: 'brian@example.com', phone: '+254767890123', avatar: 'BM' }, service: 'Barbershop', resource: 'Chair 2', staff: 'Tony B.', startAt: '2026-03-10T11:00:00Z', endAt: '2026-03-10T11:45:00Z', status: 'PENDING', amount: 800, paymentMethod: 'MPESA', mpesaRef: null, createdAt: '2026-03-10T08:00:00Z' },
   { id: 'bk-007', reference: 'EZR-S1T2U3', customer: { name: 'Fatima Hassan', email: 'fatima@example.com', phone: '+254778901234', avatar: 'FH' }, service: 'Swimming Pool', resource: 'Lane 3', staff: 'Coach Ali', startAt: '2026-03-10T07:00:00Z', endAt: '2026-03-10T08:00:00Z', status: 'CANCELLED', amount: 2500, paymentMethod: 'MPESA', mpesaRef: 'QJK345STU', createdAt: '2026-03-07T10:00:00Z' },
-  { id: 'bk-008', reference: 'EZR-V4W5X6', customer: { name: 'Samuel Njoroge', email: 'samuel@example.com', phone: '+254789012345', avatar: 'SN' }, service: 'Banquet Hall', resource: 'Banquet Suite', staff: 'Rose A.', startAt: '2026-03-20T18:00:00Z', endAt: '2026-03-20T23:00:00Z', status: 'CONFIRMED', amount: 65000, paymentMethod: 'MPESA', mpesaRef: 'QJK678VWX', createdAt: '2026-03-05T14:00:00Z' },
+  { id: 'bk-008', reference: 'EZR-V4W5X6', customer: { name: 'Samuel Njoroge', email: 'samuel@example.com', phone: '+254789012345', avatar: 'SN' }, service: 'Banquet Hall', resource: 'Banquet Suite', staff: 'Rose A.', startAt: '2026-03-20T18:00:00Z', endAt: '2026-03-20T23:00:00Z', status: 'CONFIRMED', amount: 65000, paymentMethod: 'MPESA', mpesaRef: 'QJK678VWX', createdAt: '2026-03-05T14:00:00Z', expectedGuests: 96, eventNotes: 'Corporate awards dinner · 8 rounds · halal option' },
   { id: 'bk-009', reference: 'EZR-M9N0P1', customer: { name: 'Wanjiku Thuo', email: 'wanjiku@example.com', phone: '+254798001122', avatar: 'WT' }, service: 'Salon & Spa', resource: 'Suite 2', staff: 'Grace M.', startAt: '2026-03-09T14:00:00Z', endAt: '2026-03-09T15:30:00Z', status: 'COMPLETED', amount: 4200, paymentMethod: 'MPESA', mpesaRef: 'QJKM9N0P', createdAt: '2026-03-09T16:00:00Z' },
 ]
 

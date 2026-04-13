@@ -1,7 +1,7 @@
 'use client'
 
 import * as Dialog from '@radix-ui/react-dialog'
-import { X, Shield } from 'lucide-react'
+import { X, Shield, Users, ClipboardList } from 'lucide-react'
 import { toast } from 'sonner'
 import { type Booking } from '@/lib/mock-data'
 import { formatCurrency, formatDate, formatTime } from '@/lib/utils'
@@ -141,6 +141,30 @@ export function BookingDetailDrawer({
                 </div>
               </div>
             </div>
+
+            {(booking.expectedGuests != null || booking.eventNotes) && (
+              <div className="border-t border-gray-100 pt-4 mt-4">
+                <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5 text-gray-400" />
+                  Event &amp; attendance
+                </h4>
+                {booking.expectedGuests != null && (
+                  <div className="mb-3 rounded-lg bg-slate-50 border border-slate-100 px-3 py-2">
+                    <span className="text-xs text-gray-500">Expected guests</span>
+                    <p className="text-lg font-semibold text-gray-900">{booking.expectedGuests}</p>
+                  </div>
+                )}
+                {booking.eventNotes && (
+                  <div className="rounded-lg bg-amber-50/80 border border-amber-100 px-3 py-2.5">
+                    <span className="text-xs font-medium text-amber-900 flex items-center gap-1">
+                      <ClipboardList className="w-3.5 h-3.5" />
+                      Setup &amp; run sheet
+                    </span>
+                    <p className="text-sm text-amber-950/90 mt-1 whitespace-pre-wrap leading-relaxed">{booking.eventNotes}</p>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="border-t border-gray-100 pt-4 mt-4">
               <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Payment</h4>
