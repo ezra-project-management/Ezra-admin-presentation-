@@ -67,15 +67,15 @@ export interface StaffMember {
 
 /** Demo portal logins aligned with staff records (password: demo1234). */
 export const DEMO_STAFF_CREDENTIALS: { name: string; email: string; role: string; departments: string }[] = [
-  { name: 'James Kariuki', email: 'james.k@ezraannex.com', role: 'Super Admin (demo)', departments: 'Boardrooms, Ballroom, Banquet' },
-  { name: 'Grace Mwangi', email: 'grace.m@ezraannex.com', role: 'Staff', departments: 'Salon & Spa' },
-  { name: 'Tony Baraka', email: 'tony.b@ezraannex.com', role: 'Staff', departments: 'Barbershop' },
-  { name: 'Mike Tanui', email: 'mike.t@ezraannex.com', role: 'Staff', departments: 'Fitness Centre' },
-  { name: 'Sarah Wanjiru', email: 'sarah.w@ezraannex.com', role: 'Manager', departments: 'Ballroom, Banquet Hall' },
-  { name: 'Coach Ali Hassan', email: 'ali.h@ezraannex.com', role: 'Staff', departments: 'Swimming Pool' },
-  { name: 'Rose Adhiambo', email: 'rose.a@ezraannex.com', role: 'Staff', departments: 'Banquet Hall, Ballroom' },
-  { name: 'Finance Desk', email: 'finance@ezraannex.com', role: 'Finance', departments: 'Accounts' },
-  { name: 'Front desk', email: 'frontdesk@ezraannex.com', role: 'Secretary / Front desk', departments: 'All touchpoints' },
+  { name: 'James Kariuki', email: 'james.k@ezracenter.com', role: 'Super Admin (demo)', departments: 'Boardrooms, Ballroom, Banquet' },
+  { name: 'Grace Mwangi', email: 'grace.m@ezracenter.com', role: 'Staff', departments: 'Salon & Spa' },
+  { name: 'Tony Baraka', email: 'tony.b@ezracenter.com', role: 'Staff', departments: 'Barbershop' },
+  { name: 'Mike Tanui', email: 'mike.t@ezracenter.com', role: 'Staff', departments: 'Fitness Centre' },
+  { name: 'Sarah Wanjiru', email: 'sarah.w@ezracenter.com', role: 'Manager', departments: 'Ballroom, Banquet Hall' },
+  { name: 'Coach Ali Hassan', email: 'ali.h@ezracenter.com', role: 'Staff', departments: 'Swimming Pool' },
+  { name: 'Rose Adhiambo', email: 'rose.a@ezracenter.com', role: 'Staff', departments: 'Banquet Hall, Ballroom' },
+  { name: 'Finance Desk', email: 'finance@ezracenter.com', role: 'Finance', departments: 'Accounts' },
+  { name: 'Front desk', email: 'frontdesk@ezracenter.com', role: 'Secretary / Front desk', departments: 'All touchpoints' },
 ]
 
 export interface OccupancyItem {
@@ -144,17 +144,17 @@ export const MOCK_CUSTOMERS: CustomerRecord[] = [
 ]
 
 export const MOCK_STAFF: StaffMember[] = [
-  { id: 'st-001', name: 'Grace Mwangi', email: 'grace.m@ezraannex.com', phone: '+254711000001', avatar: 'GM', role: 'STAFF', departments: ['salon-spa'], isOnDuty: true, joinDate: '2023-04-01', bookingAttribution: 'Grace M.' },
-  { id: 'st-002', name: 'James Kariuki', email: 'james.k@ezraannex.com', phone: '+254711000002', avatar: 'JK', role: 'MANAGER', departments: ['boardroom', 'banquet-hall', 'ballroom'], isOnDuty: true, joinDate: '2022-11-15', bookingAttribution: 'James K.' },
-  { id: 'st-003', name: 'Tony Baraka', email: 'tony.b@ezraannex.com', phone: '+254711000003', avatar: 'TB', role: 'STAFF', departments: ['barbershop'], isOnDuty: true, joinDate: '2024-01-20', bookingAttribution: 'Tony B.' },
-  { id: 'st-004', name: 'Mike Tanui', email: 'mike.t@ezraannex.com', phone: '+254711000004', avatar: 'MT', role: 'STAFF', departments: ['gym'], isOnDuty: false, joinDate: '2023-09-05', bookingAttribution: 'Mike T.' },
-  { id: 'st-006', name: 'Sarah Wanjiru', email: 'sarah.w@ezraannex.com', phone: '+254711000006', avatar: 'SW', role: 'MANAGER', departments: ['ballroom', 'banquet-hall'], isOnDuty: false, joinDate: '2022-08-30', bookingAttribution: 'Sarah W.' },
-  { id: 'st-007', name: 'Coach Ali Hassan', email: 'ali.h@ezraannex.com', phone: '+254711000007', avatar: 'AH', role: 'STAFF', departments: ['swimming-pool'], isOnDuty: true, joinDate: '2024-03-01', bookingAttribution: 'Coach Ali' },
-  { id: 'st-008', name: 'Rose Adhiambo', email: 'rose.a@ezraannex.com', phone: '+254711000008', avatar: 'RA', role: 'STAFF', departments: ['banquet-hall', 'ballroom'], isOnDuty: true, joinDate: '2023-12-10', bookingAttribution: 'Rose A.' },
+  { id: 'st-001', name: 'Grace Mwangi', email: 'grace.m@ezracenter.com', phone: '+254711000001', avatar: 'GM', role: 'STAFF', departments: ['salon-spa'], isOnDuty: true, joinDate: '2023-04-01', bookingAttribution: 'Grace M.' },
+  { id: 'st-002', name: 'James Kariuki', email: 'james.k@ezracenter.com', phone: '+254711000002', avatar: 'JK', role: 'MANAGER', departments: ['boardroom', 'banquet-hall', 'ballroom'], isOnDuty: true, joinDate: '2022-11-15', bookingAttribution: 'James K.' },
+  { id: 'st-003', name: 'Tony Baraka', email: 'tony.b@ezracenter.com', phone: '+254711000003', avatar: 'TB', role: 'STAFF', departments: ['barbershop'], isOnDuty: true, joinDate: '2024-01-20', bookingAttribution: 'Tony B.' },
+  { id: 'st-004', name: 'Mike Tanui', email: 'mike.t@ezracenter.com', phone: '+254711000004', avatar: 'MT', role: 'STAFF', departments: ['gym'], isOnDuty: false, joinDate: '2023-09-05', bookingAttribution: 'Mike T.' },
+  { id: 'st-006', name: 'Sarah Wanjiru', email: 'sarah.w@ezracenter.com', phone: '+254711000006', avatar: 'SW', role: 'MANAGER', departments: ['ballroom', 'banquet-hall'], isOnDuty: false, joinDate: '2022-08-30', bookingAttribution: 'Sarah W.' },
+  { id: 'st-007', name: 'Coach Ali Hassan', email: 'ali.h@ezracenter.com', phone: '+254711000007', avatar: 'AH', role: 'STAFF', departments: ['swimming-pool'], isOnDuty: true, joinDate: '2024-03-01', bookingAttribution: 'Coach Ali' },
+  { id: 'st-008', name: 'Rose Adhiambo', email: 'rose.a@ezracenter.com', phone: '+254711000008', avatar: 'RA', role: 'STAFF', departments: ['banquet-hall', 'ballroom'], isOnDuty: true, joinDate: '2023-12-10', bookingAttribution: 'Rose A.' },
   {
     id: 'st-099',
     name: 'Team Staff (demo)',
-    email: 'staff@ezraannex.com',
+    email: 'staff@ezracenter.com',
     phone: '+254711000099',
     avatar: 'TS',
     role: 'STAFF',
@@ -257,9 +257,9 @@ export const NOTIFICATIONS: Notification[] = [
 ]
 
 export const SMS_TEMPLATES: SmsTemplate[] = [
-  { id: 'tpl-001', name: 'Booking Confirmed', event: 'booking_confirmed', message: 'Hi {{name}}, your {{service}} booking EZR-{{ref}} is confirmed for {{date}} at {{time}}. See you soon! - Ezra Annex', enabled: true },
-  { id: 'tpl-002', name: 'Payment Received', event: 'payment_received', message: 'Payment of KES {{amount}} received for booking EZR-{{ref}}. Thank you! - Ezra Annex', enabled: true },
-  { id: 'tpl-003', name: 'Reminder 24hrs', event: 'reminder_24hr', message: 'Reminder: Your {{service}} appointment is tomorrow at {{time}}. Ref: EZR-{{ref}} - Ezra Annex', enabled: true },
-  { id: 'tpl-004', name: 'Reminder 2hrs', event: 'reminder_2hr', message: 'Your {{service}} starts in 2 hours at {{time}}. We look forward to seeing you. - Ezra Annex', enabled: true },
-  { id: 'tpl-005', name: 'Cancellation', event: 'booking_cancelled', message: 'Your booking EZR-{{ref}} has been cancelled. Refund of KES {{amount}} within 3-5 days. - Ezra Annex', enabled: false },
+  { id: 'tpl-001', name: 'Booking Confirmed', event: 'booking_confirmed', message: 'Hi {{name}}, your {{service}} booking EZR-{{ref}} is confirmed for {{date}} at {{time}}. See you soon! - Ezra Center', enabled: true },
+  { id: 'tpl-002', name: 'Payment Received', event: 'payment_received', message: 'Payment of KES {{amount}} received for booking EZR-{{ref}}. Thank you! - Ezra Center', enabled: true },
+  { id: 'tpl-003', name: 'Reminder 24hrs', event: 'reminder_24hr', message: 'Reminder: Your {{service}} appointment is tomorrow at {{time}}. Ref: EZR-{{ref}} - Ezra Center', enabled: true },
+  { id: 'tpl-004', name: 'Reminder 2hrs', event: 'reminder_2hr', message: 'Your {{service}} starts in 2 hours at {{time}}. We look forward to seeing you. - Ezra Center', enabled: true },
+  { id: 'tpl-005', name: 'Cancellation', event: 'booking_cancelled', message: 'Your booking EZR-{{ref}} has been cancelled. Refund of KES {{amount}} within 3-5 days. - Ezra Center', enabled: false },
 ]

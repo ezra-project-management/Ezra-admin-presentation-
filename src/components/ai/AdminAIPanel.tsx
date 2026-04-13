@@ -35,10 +35,10 @@ const QUICK_ACTIONS = [
 const initialMessage: Message = {
   id: '1',
   role: 'ai',
-  text: "Good day! I'm your Ezra Annex operations assistant. I can help you manage schedules, block staff time, check bookings, handle cancellations, and pull reports. What do you need?",
+  text: "Good day! I'm your Ezra Center operations assistant. I can help you manage schedules, block staff time, check bookings, handle cancellations, and pull reports. What do you need?",
 }
 
-const SYSTEM_PROMPT = `You are the Ezra Annex operations assistant (demo admin). Today is Thursday March 12 2026. Working hours: 6am–10pm daily.
+const SYSTEM_PROMPT = `You are the Ezra Center operations assistant (demo admin). Today is Thursday March 12 2026. Working hours: 6am–10pm daily.
 
 Services: Salon & Spa, Barbershop, Fitness Centre, Meeting Rooms, Ballroom, Banquet Hall, Swimming Pool Training.
 

@@ -25,11 +25,11 @@ export default function SettingsPage() {
       {activeTab === 'General' && (
         <div className="bg-white rounded-[10px] border border-gray-100 shadow-[var(--shadow-card)] p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div><label className="text-xs font-medium text-gray-600 mb-1 block">Business Name</label><input defaultValue="Ezra Annex" className="w-full text-sm border border-gray-200 rounded-[7px] px-3 py-2" /></div>
+            <div><label className="text-xs font-medium text-gray-600 mb-1 block">Business Name</label><input defaultValue="Ezra Center" className="w-full text-sm border border-gray-200 rounded-[7px] px-3 py-2" /></div>
             <div><label className="text-xs font-medium text-gray-600 mb-1 block">Timezone</label><input defaultValue="Africa/Nairobi (EAT, UTC+3)" disabled className="w-full text-sm border border-gray-200 rounded-[7px] px-3 py-2 bg-gray-50 text-gray-500" /></div>
             <div><label className="text-xs font-medium text-gray-600 mb-1 block">Currency</label><input defaultValue="KES — Kenyan Shilling" disabled className="w-full text-sm border border-gray-200 rounded-[7px] px-3 py-2 bg-gray-50 text-gray-500" /></div>
             <div><label className="text-xs font-medium text-gray-600 mb-1 block">Business Phone</label><input defaultValue="+254 700 000 000" className="w-full text-sm border border-gray-200 rounded-[7px] px-3 py-2" /></div>
-            <div><label className="text-xs font-medium text-gray-600 mb-1 block">Email</label><input defaultValue="info@ezraannex.com" className="w-full text-sm border border-gray-200 rounded-[7px] px-3 py-2" /></div>
+            <div><label className="text-xs font-medium text-gray-600 mb-1 block">Email</label><input defaultValue="info@ezracenter.com" className="w-full text-sm border border-gray-200 rounded-[7px] px-3 py-2" /></div>
             <div><label className="text-xs font-medium text-gray-600 mb-1 block">Address</label><textarea defaultValue="Nairobi, Kenya" rows={2} className="w-full text-sm border border-gray-200 rounded-[7px] px-3 py-2 resize-none" /></div>
           </div>
           <h4 className="text-sm font-semibold text-gray-900 mb-3">Operating Hours</h4>

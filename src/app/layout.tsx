@@ -19,8 +19,8 @@ const jetbrains = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Ezra Annex Admin',
-  description: 'Internal operations dashboard for Ezra Annex staff and management',
+  title: 'Ezra Center Admin',
+  description: 'Internal operations dashboard for Ezra Center staff and management',
 }
 
 export default function RootLayout({

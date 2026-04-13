@@ -2,15 +2,33 @@ import { MOCK_STAFF } from '@/lib/mock-data'
 
 export type PortalRole = 'SUPER_ADMIN' | 'MANAGER' | 'SECRETARY' | 'STAFF' | 'FINANCE'
 
+/** Ezra Center demo inboxes; legacy `@ezraannex.com` kept so existing sessions still resolve. */
 const SUPER_ADMIN_EMAILS = new Set(
-  ['admin@ezraannex.com', 'james.k@ezraannex.com'].map((e) => e.toLowerCase())
+  ['admin@ezracenter.com', 'james.k@ezracenter.com', 'admin@ezraannex.com', 'james.k@ezraannex.com'].map((e) =>
+    e.toLowerCase()
+  )
 )
 
-const MANAGER_EMAILS = new Set(['manager@ezraannex.com', 'sarah.w@ezraannex.com'].map((e) => e.toLowerCase()))
+const MANAGER_EMAILS = new Set(
+  ['manager@ezracenter.com', 'sarah.w@ezracenter.com', 'manager@ezraannex.com', 'sarah.w@ezraannex.com'].map((e) =>
+    e.toLowerCase()
+  )
+)
 
-const SECRETARY_EMAILS = new Set(['frontdesk@ezraannex.com', 'secretary@ezraannex.com'].map((e) => e.toLowerCase()))
+const SECRETARY_EMAILS = new Set(
+  [
+    'frontdesk@ezracenter.com',
+    'secretary@ezracenter.com',
+    'frontdesk@ezraannex.com',
+    'secretary@ezraannex.com',
+  ].map((e) => e.toLowerCase())
+)
 
-const FINANCE_EMAILS = new Set(['finance@ezraannex.com', 'accounts@ezraannex.com'].map((e) => e.toLowerCase()))
+const FINANCE_EMAILS = new Set(
+  ['finance@ezracenter.com', 'accounts@ezracenter.com', 'finance@ezraannex.com', 'accounts@ezraannex.com'].map((e) =>
+    e.toLowerCase()
+  )
+)
 
 /** Map demo inbox → portal role. */
 export function resolveRoleFromEmail(email: string): PortalRole {

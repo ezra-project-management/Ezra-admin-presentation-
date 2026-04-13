@@ -9,11 +9,11 @@ import { DEMO_STAFF_CREDENTIALS } from '@/lib/mock-data'
 import { defaultHomeForRole, resolveRoleFromEmail, type PortalRole } from '@/lib/roles'
 
 const QUICK_ROLES: { label: string; email: string; role: PortalRole }[] = [
-  { label: 'STAFF', email: 'staff@ezraannex.com', role: 'STAFF' },
-  { label: 'MANAGER', email: 'manager@ezraannex.com', role: 'MANAGER' },
-  { label: 'SECRETARY', email: 'frontdesk@ezraannex.com', role: 'SECRETARY' },
-  { label: 'ADMIN', email: 'admin@ezraannex.com', role: 'SUPER_ADMIN' },
-  { label: 'FINANCE', email: 'finance@ezraannex.com', role: 'FINANCE' },
+  { label: 'STAFF', email: 'staff@ezracenter.com', role: 'STAFF' },
+  { label: 'MANAGER', email: 'manager@ezracenter.com', role: 'MANAGER' },
+  { label: 'SECRETARY', email: 'frontdesk@ezracenter.com', role: 'SECRETARY' },
+  { label: 'ADMIN', email: 'admin@ezracenter.com', role: 'SUPER_ADMIN' },
+  { label: 'FINANCE', email: 'finance@ezracenter.com', role: 'FINANCE' },
 ]
 
 export default function LoginPage() {
@@ -55,7 +55,7 @@ export default function LoginPage() {
                 <span className="font-mono text-sm font-semibold text-white tracking-tight">EA</span>
               </div>
               <div>
-                <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500">Ezra Annex</p>
+                <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500">Ezra Center</p>
                 <h1 className="text-lg font-semibold text-slate-900 tracking-tight leading-tight">Operations sign-in</h1>
               </div>
             </div>
@@ -74,7 +74,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                placeholder="name@ezraannex.com"
+                placeholder="name@ezracenter.com"
                 autoComplete="email"
                 className="w-full px-3 py-2.5 text-[13px] border border-slate-200 rounded-md bg-slate-50/50 focus:outline-none focus:ring-2 focus:ring-brand/25 focus:border-brand focus:bg-white transition-shadow"
                 required
@@ -152,7 +152,7 @@ export default function LoginPage() {
 
         <div className="mt-6 rounded-lg border border-slate-200/80 bg-white/80 px-4 py-3 text-center">
           <p className="text-[11px] font-medium text-slate-600">Demo environment · password for all accounts: demo1234</p>
-          <p className="text-[11px] text-slate-500 mt-1">Finance: finance@ezraannex.com</p>
+          <p className="text-[11px] text-slate-500 mt-1">Finance: finance@ezracenter.com</p>
         </div>
 
         <details className="mt-4 text-center">

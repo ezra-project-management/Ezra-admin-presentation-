@@ -24,7 +24,7 @@ const CHANNELS = [
   },
   {
     title: 'IT & portal help',
-    detail: 'support@ezraannex.com',
+    detail: 'support@ezracenter.com',
     hint: 'Login, permissions, and console bugs',
     icon: Mail,
   },
@@ -68,7 +68,7 @@ export default function SupportPage() {
     <div>
       <PageHeader
         title="Support"
-        subtitle="Help for Ezra Annex staff — operations, finance, and technical assistance."
+        subtitle="Help for Ezra Center staff — operations, finance, and technical assistance."
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">

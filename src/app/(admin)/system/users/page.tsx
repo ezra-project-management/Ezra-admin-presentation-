@@ -8,11 +8,11 @@ import { PageHeader } from '@/components/ui/PageHeader'
 import { Avatar } from '@/components/ui/Avatar'
 
 const ADMIN_USERS = [
-  { id: 'u-1', name: 'James Kariuki', email: 'james.k@ezraannex.com', role: 'SUPER_ADMIN', lastLogin: '2026-03-10T09:00:00Z', status: 'Active' },
-  { id: 'u-2', name: 'Grace Mwangi', email: 'grace.m@ezraannex.com', role: 'MANAGER', lastLogin: '2026-03-10T08:45:00Z', status: 'Active' },
-  { id: 'u-3', name: 'Tony Baraka', email: 'tony.b@ezraannex.com', role: 'STAFF', lastLogin: '2026-03-09T17:00:00Z', status: 'Active' },
-  { id: 'u-4', name: 'Sarah Wanjiru', email: 'sarah.w@ezraannex.com', role: 'MANAGER', lastLogin: '2026-03-08T12:00:00Z', status: 'Active' },
-  { id: 'u-5', name: 'Admin Demo', email: 'admin@ezraannex.com', role: 'SUPER_ADMIN', lastLogin: '2026-03-10T09:15:00Z', status: 'Active' },
+  { id: 'u-1', name: 'James Kariuki', email: 'james.k@ezracenter.com', role: 'SUPER_ADMIN', lastLogin: '2026-03-10T09:00:00Z', status: 'Active' },
+  { id: 'u-2', name: 'Grace Mwangi', email: 'grace.m@ezracenter.com', role: 'MANAGER', lastLogin: '2026-03-10T08:45:00Z', status: 'Active' },
+  { id: 'u-3', name: 'Tony Baraka', email: 'tony.b@ezracenter.com', role: 'STAFF', lastLogin: '2026-03-09T17:00:00Z', status: 'Active' },
+  { id: 'u-4', name: 'Sarah Wanjiru', email: 'sarah.w@ezracenter.com', role: 'MANAGER', lastLogin: '2026-03-08T12:00:00Z', status: 'Active' },
+  { id: 'u-5', name: 'Admin Demo', email: 'admin@ezracenter.com', role: 'SUPER_ADMIN', lastLogin: '2026-03-10T09:15:00Z', status: 'Active' },
 ]
 
 const ROLE_STYLES: Record<string, string> = {
@@ -69,7 +69,7 @@ export default function UsersPage() {
               <button onClick={() => setShowInvite(false)} className="text-gray-400 hover:text-gray-600"><X className="w-5 h-5" /></button>
             </div>
             <div className="space-y-3">
-              <div><label className="text-xs font-medium text-gray-600 mb-1 block">Email</label><input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} type="email" placeholder="user@ezraannex.com" className="w-full text-sm border border-gray-200 rounded-[7px] px-3 py-2" /></div>
+              <div><label className="text-xs font-medium text-gray-600 mb-1 block">Email</label><input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} type="email" placeholder="user@ezracenter.com" className="w-full text-sm border border-gray-200 rounded-[7px] px-3 py-2" /></div>
               <div><label className="text-xs font-medium text-gray-600 mb-1 block">Role</label><select value={inviteRole} onChange={e => setInviteRole(e.target.value)} className="w-full text-sm border border-gray-200 rounded-[7px] px-3 py-2"><option value="STAFF">Staff</option><option value="MANAGER">Manager</option><option value="SUPER_ADMIN">Super Admin</option></select></div>
             </div>
             <div className="flex justify-end gap-3 mt-6">

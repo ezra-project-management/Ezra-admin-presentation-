@@ -1,14 +1,15 @@
 'use client'
 
 import { CalendarDays, XCircle, DollarSign, Users } from 'lucide-react'
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { StatCard } from '@/components/ui/StatCard'
 import { REVENUE_BY_SERVICE } from '@/lib/mock-data'
 
+/** Deterministic demo series (avoids empty charts from invalid nested <Bar> and random hydration). */
 const DAILY_BOOKINGS = Array.from({ length: 30 }, (_, i) => ({
   day: i + 1,
-  bookings: Math.floor(Math.random() * 10) + 3,
+  bookings: [5, 7, 6, 8, 9, 7, 8, 10, 11, 9, 8, 7, 6, 8, 9, 10, 12, 11, 9, 8, 7, 8, 9, 10, 11, 10, 9, 8, 7, 8][i] ?? 6,
 }))
 
 export default function BookingTrendsPage() {
@@ -26,7 +27,7 @@ export default function BookingTrendsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-[10px] border border-gray-100 shadow-[var(--shadow-card)] p-6">
           <h3 className="text-base font-semibold text-gray-900 mb-4">Daily Bookings (March 2026)</h3>
-          <div className="h-[280px]">
+          <div className="h-[280px] min-h-[200px] w-full min-w-0">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={DAILY_BOOKINGS}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
@@ -41,16 +42,16 @@ export default function BookingTrendsPage() {
 
         <div className="bg-white rounded-[10px] border border-gray-100 shadow-[var(--shadow-card)] p-6">
           <h3 className="text-base font-semibold text-gray-900 mb-4">Bookings by Service</h3>
-          <div className="h-[280px]">
+          <div className="h-[280px] min-h-[200px] w-full min-w-0">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={REVENUE_BY_SERVICE} layout="vertical">
+              <BarChart data={REVENUE_BY_SERVICE} layout="vertical" margin={{ left: 8, right: 8 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" horizontal={false} />
                 <XAxis type="number" fontSize={11} tickLine={false} />
                 <YAxis type="category" dataKey="service" fontSize={11} tickLine={false} width={100} />
                 <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid #E5E7EB', fontSize: 12 }} />
-                <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={20}>
-                  {REVENUE_BY_SERVICE.map((entry, i) => (
-                    <Bar key={i} dataKey="value" fill={entry.fill} />
+                <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={22}>
+                  {REVENUE_BY_SERVICE.map((entry) => (
+                    <Cell key={entry.service} fill={entry.fill} />
                   ))}
                 </Bar>
               </BarChart>

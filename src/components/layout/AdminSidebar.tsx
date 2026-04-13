@@ -83,7 +83,7 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
               <span className="font-mono text-[11px] font-semibold text-slate-200">EA</span>
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="text-[13px] font-semibold text-slate-100 leading-tight truncate">Ezra Annex</span>
+              <span className="text-[13px] font-semibold text-slate-100 leading-tight truncate">Ezra Center</span>
               <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500">
                 {role === 'FINANCE' ? 'Finance' : 'Console'}
               </span>
