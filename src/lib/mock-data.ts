@@ -61,7 +61,22 @@ export interface StaffMember {
   departments: string[]
   isOnDuty: boolean
   joinDate: string
+  /** Matches `Booking.staff` in mock data for filtering a staff member's sessions. */
+  bookingAttribution: string
 }
+
+/** Demo portal logins aligned with staff records (password: demo1234). */
+export const DEMO_STAFF_CREDENTIALS: { name: string; email: string; role: string; departments: string }[] = [
+  { name: 'James Kariuki', email: 'james.k@ezraannex.com', role: 'Super Admin (demo)', departments: 'Boardrooms, Ballroom, Banquet' },
+  { name: 'Grace Mwangi', email: 'grace.m@ezraannex.com', role: 'Staff', departments: 'Salon & Spa' },
+  { name: 'Tony Baraka', email: 'tony.b@ezraannex.com', role: 'Staff', departments: 'Barbershop' },
+  { name: 'Mike Tanui', email: 'mike.t@ezraannex.com', role: 'Staff', departments: 'Fitness Centre' },
+  { name: 'Sarah Wanjiru', email: 'sarah.w@ezraannex.com', role: 'Manager', departments: 'Ballroom, Banquet Hall' },
+  { name: 'Coach Ali Hassan', email: 'ali.h@ezraannex.com', role: 'Staff', departments: 'Swimming Pool' },
+  { name: 'Rose Adhiambo', email: 'rose.a@ezraannex.com', role: 'Staff', departments: 'Banquet Hall, Ballroom' },
+  { name: 'Finance Desk', email: 'finance@ezraannex.com', role: 'Finance', departments: 'Accounts' },
+  { name: 'Mary Akinyi', email: 'secretary@ezraannex.com', role: 'Front desk', departments: 'Reception' },
+]
 
 export interface OccupancyItem {
   resource: string
@@ -128,13 +143,25 @@ export const MOCK_CUSTOMERS: CustomerRecord[] = [
 ]
 
 export const MOCK_STAFF: StaffMember[] = [
-  { id: 'st-001', name: 'Grace Mwangi', email: 'grace.m@ezraannex.com', phone: '+254711000001', avatar: 'GM', role: 'STAFF', departments: ['salon-spa'], isOnDuty: true, joinDate: '2023-04-01' },
-  { id: 'st-002', name: 'James Kariuki', email: 'james.k@ezraannex.com', phone: '+254711000002', avatar: 'JK', role: 'MANAGER', departments: ['boardroom', 'banquet-hall', 'ballroom'], isOnDuty: true, joinDate: '2022-11-15' },
-  { id: 'st-003', name: 'Tony Baraka', email: 'tony.b@ezraannex.com', phone: '+254711000003', avatar: 'TB', role: 'STAFF', departments: ['barbershop'], isOnDuty: true, joinDate: '2024-01-20' },
-  { id: 'st-004', name: 'Mike Tanui', email: 'mike.t@ezraannex.com', phone: '+254711000004', avatar: 'MT', role: 'STAFF', departments: ['gym'], isOnDuty: false, joinDate: '2023-09-05' },
-  { id: 'st-006', name: 'Sarah Wanjiru', email: 'sarah.w@ezraannex.com', phone: '+254711000006', avatar: 'SW', role: 'MANAGER', departments: ['ballroom', 'banquet-hall'], isOnDuty: false, joinDate: '2022-08-30' },
-  { id: 'st-007', name: 'Coach Ali Hassan', email: 'ali.h@ezraannex.com', phone: '+254711000007', avatar: 'AH', role: 'STAFF', departments: ['swimming-pool'], isOnDuty: true, joinDate: '2024-03-01' },
-  { id: 'st-008', name: 'Rose Adhiambo', email: 'rose.a@ezraannex.com', phone: '+254711000008', avatar: 'RA', role: 'STAFF', departments: ['banquet-hall', 'ballroom'], isOnDuty: true, joinDate: '2023-12-10' },
+  { id: 'st-001', name: 'Grace Mwangi', email: 'grace.m@ezraannex.com', phone: '+254711000001', avatar: 'GM', role: 'STAFF', departments: ['salon-spa'], isOnDuty: true, joinDate: '2023-04-01', bookingAttribution: 'Grace M.' },
+  { id: 'st-002', name: 'James Kariuki', email: 'james.k@ezraannex.com', phone: '+254711000002', avatar: 'JK', role: 'MANAGER', departments: ['boardroom', 'banquet-hall', 'ballroom'], isOnDuty: true, joinDate: '2022-11-15', bookingAttribution: 'James K.' },
+  { id: 'st-003', name: 'Tony Baraka', email: 'tony.b@ezraannex.com', phone: '+254711000003', avatar: 'TB', role: 'STAFF', departments: ['barbershop'], isOnDuty: true, joinDate: '2024-01-20', bookingAttribution: 'Tony B.' },
+  { id: 'st-004', name: 'Mike Tanui', email: 'mike.t@ezraannex.com', phone: '+254711000004', avatar: 'MT', role: 'STAFF', departments: ['gym'], isOnDuty: false, joinDate: '2023-09-05', bookingAttribution: 'Mike T.' },
+  { id: 'st-006', name: 'Sarah Wanjiru', email: 'sarah.w@ezraannex.com', phone: '+254711000006', avatar: 'SW', role: 'MANAGER', departments: ['ballroom', 'banquet-hall'], isOnDuty: false, joinDate: '2022-08-30', bookingAttribution: 'Sarah W.' },
+  { id: 'st-007', name: 'Coach Ali Hassan', email: 'ali.h@ezraannex.com', phone: '+254711000007', avatar: 'AH', role: 'STAFF', departments: ['swimming-pool'], isOnDuty: true, joinDate: '2024-03-01', bookingAttribution: 'Coach Ali' },
+  { id: 'st-008', name: 'Rose Adhiambo', email: 'rose.a@ezraannex.com', phone: '+254711000008', avatar: 'RA', role: 'STAFF', departments: ['banquet-hall', 'ballroom'], isOnDuty: true, joinDate: '2023-12-10', bookingAttribution: 'Rose A.' },
+  {
+    id: 'st-099',
+    name: 'Team Staff (demo)',
+    email: 'staff@ezraannex.com',
+    phone: '+254711000099',
+    avatar: 'TS',
+    role: 'STAFF',
+    departments: ['salon-spa', 'barbershop', 'gym', 'boardroom', 'ballroom', 'banquet-hall', 'swimming-pool'],
+    isOnDuty: true,
+    joinDate: '2025-01-01',
+    bookingAttribution: '__ALL__',
+  },
 ]
 
 export const REVENUE_DAILY = [
@@ -153,6 +180,52 @@ export const REVENUE_BY_SERVICE = [
   { service: 'Business', value: 98000, fill: '#15803D' },
   { service: 'Fitness', value: 71000, fill: '#7C3AED' },
 ]
+
+/** Revenue attributed to each department (matches booking `service` labels). */
+export const REVENUE_BY_DEPARTMENT_WEEK: { department: string; amount: number; bookings: number; fill: string }[] = [
+  { department: 'Salon & Spa', amount: 42800, bookings: 14, fill: '#0d9488' },
+  { department: 'Barbershop', amount: 18600, bookings: 22, fill: '#374151' },
+  { department: 'Gym', amount: 31200, bookings: 38, fill: '#15803d' },
+  { department: 'Boardroom', amount: 94500, bookings: 6, fill: '#2563eb' },
+  { department: 'Ballroom', amount: 198000, bookings: 2, fill: '#d97706' },
+  { department: 'Banquet Hall', amount: 87200, bookings: 4, fill: '#ea580c' },
+  { department: 'Swimming Pool', amount: 15400, bookings: 11, fill: '#0891b2' },
+]
+
+export const REVENUE_BY_DEPARTMENT_MONTH: { department: string; amount: number; bookings: number; fill: string }[] = [
+  { department: 'Salon & Spa', amount: 168400, bookings: 56, fill: '#0d9488' },
+  { department: 'Barbershop', amount: 72400, bookings: 91, fill: '#374151' },
+  { department: 'Gym', amount: 118200, bookings: 142, fill: '#15803d' },
+  { department: 'Boardroom', amount: 382000, bookings: 24, fill: '#2563eb' },
+  { department: 'Ballroom', amount: 756000, bookings: 8, fill: '#d97706' },
+  { department: 'Banquet Hall', amount: 341500, bookings: 18, fill: '#ea580c' },
+  { department: 'Swimming Pool', amount: 58200, bookings: 44, fill: '#0891b2' },
+]
+
+/** Total confirmed + completed style bookings per weekday (for trends UI). */
+export const BOOKING_TRENDS_WEEK: { day: string; label: string; count: number }[] = [
+  { day: 'Mon', label: 'Monday', count: 28 },
+  { day: 'Tue', label: 'Tuesday', count: 34 },
+  { day: 'Wed', label: 'Wednesday', count: 22 },
+  { day: 'Thu', label: 'Thursday', count: 41 },
+  { day: 'Fri', label: 'Friday', count: 52 },
+  { day: 'Sat', label: 'Saturday', count: 67 },
+  { day: 'Sun', label: 'Sunday', count: 45 },
+]
+
+/** Stable utilization % per resource (avoids random UI jitter). */
+export const OCCUPANCY_UTILIZATION: Record<string, number> = {
+  'Salon Suite 1': 78,
+  'Salon Suite 2': 34,
+  'Boardroom A': 92,
+  'Boardroom B': 41,
+  'Grand Ballroom': 0,
+  'Barber Chair 1': 65,
+  'Barber Chair 2': 28,
+  'Gym Floor': 55,
+  'Pool Lane 1': 22,
+  'Pool Lane 2': 71,
+}
 
 export const OCCUPANCY_DATA: OccupancyItem[] = [
   { resource: 'Salon Suite 1', current: 'Amara K.', status: 'occupied', until: '10:30 AM' },

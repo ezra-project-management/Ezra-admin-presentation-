@@ -1,5 +1,6 @@
 'use client'
 
+import { Fragment } from 'react'
 import { cn } from '@/lib/utils'
 import { OCCUPANCY_DATA } from '@/lib/mock-data'
 
@@ -11,51 +12,62 @@ function getOccupancy(resourceIndex: number, dayIndex: number): number {
 }
 
 function getHeatColor(value: number): string {
-  if (value <= 20) return 'bg-blue-50'
-  if (value <= 40) return 'bg-blue-100'
-  if (value <= 60) return 'bg-blue-200'
-  if (value <= 80) return 'bg-blue-300'
-  return 'bg-blue-500'
+  if (value <= 20) return 'bg-slate-100'
+  if (value <= 40) return 'bg-sky-100'
+  if (value <= 60) return 'bg-sky-300'
+  if (value <= 80) return 'bg-sky-500'
+  return 'bg-navy'
 }
 
 export function OccupancyHeatmap() {
   return (
     <div>
+      <p className="text-sm text-gray-600 mb-3">
+        Each cell is how busy that resource tends to be that day (0–100, demo model). Darker means higher load relative to other slots.
+      </p>
       <div className="overflow-x-auto">
-        <div className="min-w-[500px]">
-          <div className="grid gap-1" style={{ gridTemplateColumns: '140px repeat(7, 1fr)' }}>
+        <div className="min-w-[520px]">
+          <div className="grid gap-1" style={{ gridTemplateColumns: 'minmax(120px,1fr) repeat(7, minmax(0,1fr))' }}>
             <div />
             {DAYS.map(day => (
-              <div key={day} className="text-xs text-center text-gray-500 font-medium py-1">{day}</div>
+              <div key={day} className="text-[10px] sm:text-xs text-center text-gray-500 font-medium py-1">
+                {day}
+              </div>
             ))}
             {OCCUPANCY_DATA.map((resource, ri) => (
-              <>
-                <div key={resource.resource} className="text-xs text-gray-700 truncate py-2 pr-2">{resource.resource}</div>
+              <Fragment key={resource.resource}>
+                <div className="text-[10px] sm:text-xs text-gray-700 truncate py-2 pr-2" title={resource.resource}>
+                  {resource.resource}
+                </div>
                 {DAYS.map((day, di) => {
                   const occ = getOccupancy(ri, di)
                   return (
                     <div
-                      key={`${ri}-${di}`}
-                      className={cn('rounded-sm aspect-square flex items-center justify-center', getHeatColor(occ))}
-                      title={`${resource.resource} - ${day}: ${occ}%`}
+                      key={`${resource.resource}-${day}`}
+                      className={cn(
+                        'rounded-md aspect-square max-h-10 flex items-center justify-center',
+                        getHeatColor(occ),
+                        occ > 80 ? 'text-white' : 'text-gray-700'
+                      )}
+                      title={`${resource.resource} · ${day}: ${occ}%`}
                     >
-                      <span className="text-[10px] text-gray-600 font-mono">{occ}</span>
+                      <span className="text-[9px] sm:text-[10px] font-mono font-medium">{occ}</span>
                     </div>
                   )
                 })}
-              </>
+              </Fragment>
             ))}
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-2 mt-4 text-xs text-gray-400">
-        <span>Low</span>
+      <div className="flex items-center gap-2 mt-4 text-xs text-gray-500">
+        <span>Quieter</span>
         <div className="flex gap-0.5">
-          {['bg-blue-50', 'bg-blue-100', 'bg-blue-200', 'bg-blue-300', 'bg-blue-500'].map(c => (
+          {['bg-slate-100', 'bg-sky-100', 'bg-sky-300', 'bg-sky-500', 'bg-navy'].map(c => (
             <div key={c} className={cn('w-6 h-3 rounded-sm', c)} />
           ))}
         </div>
-        <span>High</span>
+        <span>Busier</span>
       </div>
     </div>
   )

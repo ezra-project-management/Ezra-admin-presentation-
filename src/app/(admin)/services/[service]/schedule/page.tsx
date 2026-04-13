@@ -3,19 +3,14 @@
 import { useParams } from 'next/navigation'
 import { toast } from 'sonner'
 import { PageHeader } from '@/components/ui/PageHeader'
-
-const SERVICE_NAMES: Record<string, string> = {
-  'salon-spa': 'Salon & Spa', barbershop: 'Barbershop', gym: 'Fitness Centre',
-  boardroom: 'Boardrooms', ballroom: 'Ballroom', 'banquet-hall': 'Banquet Hall',
-  'swimming-pool': 'Swimming Pool',
-}
+import { serviceTitle } from '@/lib/service-slugs'
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
 export default function SchedulePage() {
   const params = useParams()
   const slug = params.service as string
-  const name = SERVICE_NAMES[slug] || slug
+  const name = serviceTitle(slug)
 
   return (
     <div>

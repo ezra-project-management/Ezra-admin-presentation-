@@ -1,10 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo, useLayoutEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { MOCK_BOOKINGS, OCCUPANCY_DATA } from '@/lib/mock-data'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { cn, formatTime } from '@/lib/utils'
+import { getSessionRole } from '@/lib/admin-session'
+import type { PortalRole } from '@/lib/roles'
+import { buildClientOrdinalMap, guestDisplayName } from '@/lib/client-privacy'
 
 const HOURS = Array.from({ length: 14 }, (_, i) => i + 7) // 7am to 8pm
 
@@ -27,6 +30,13 @@ function getBookingsForResource(resource: string) {
 
 export default function CalendarPage() {
   const [view, setView] = useState<'day' | 'week'>('day')
+  const [portalRole, setPortalRole] = useState<PortalRole | null>(null)
+
+  useLayoutEffect(() => {
+    setPortalRole(getSessionRole())
+  }, [])
+
+  const ordinalMap = useMemo(() => buildClientOrdinalMap(MOCK_BOOKINGS), [])
 
   return (
     <div>
@@ -100,9 +110,11 @@ export default function CalendarPage() {
                           key={booking.id}
                           className={cn('absolute top-1 bottom-1 rounded-md px-2 py-1 border-l-2 cursor-pointer hover:opacity-80 overflow-hidden', colors.bg, colors.border)}
                           style={{ left: `${Math.max(0, left)}%`, width: `${Math.min(width, 100 - left)}%` }}
-                          title={`${booking.customer.name} - ${booking.service}\n${formatTime(booking.startAt)} - ${formatTime(booking.endAt)}`}
+                          title={`${guestDisplayName(booking, portalRole, ordinalMap)} — ${booking.service}\n${formatTime(booking.startAt)} - ${formatTime(booking.endAt)}`}
                         >
-                          <div className="text-[10px] font-medium text-gray-900 truncate">{booking.customer.name}</div>
+                          <div className="text-[10px] font-medium text-gray-900 truncate">
+                            {guestDisplayName(booking, portalRole, ordinalMap)}
+                          </div>
                           <div className="text-[9px] text-gray-500 truncate">{formatTime(booking.startAt)} - {formatTime(booking.endAt)}</div>
                         </div>
                       )

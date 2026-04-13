@@ -1,112 +1,72 @@
 'use client'
 
-import { PageHeader } from '@/components/ui/PageHeader'
-import { StatCard } from '@/components/ui/StatCard'
-import { RevenueChart } from '@/components/dashboard/RevenueChart'
-import { LiveBookingFeed } from '@/components/dashboard/LiveBookingFeed'
-import { OccupancyGrid } from '@/components/dashboard/OccupancyGrid'
-import { QuickActions } from '@/components/dashboard/QuickActions'
-import { AdminAIPanel } from '@/components/ai/AdminAIPanel'
-import { CalendarDays, TrendingUp, BarChart3, Users, AlertCircle, UserCheck } from 'lucide-react'
+import { useLayoutEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { getSessionEmail, getSessionRole } from '@/lib/admin-session'
+import type { PortalRole } from '@/lib/roles'
+import { getStaffProfileByEmail } from '@/lib/roles'
+import { SuperAdminDashboard } from '@/components/dashboard/SuperAdminDashboard'
+import { ManagerDashboard } from '@/components/dashboard/ManagerDashboard'
+import { StaffDashboard } from '@/components/dashboard/StaffDashboard'
 
 export default function DashboardPage() {
+  const router = useRouter()
+  const [role, setRole] = useState<PortalRole | null>(null)
+  const [email, setEmail] = useState('')
+
+  useLayoutEffect(() => {
+    const r = getSessionRole()
+    const e = getSessionEmail()
+    if (r === 'FINANCE') {
+      router.replace('/finance')
+    }
+    if (r === 'SECRETARY') {
+      router.replace('/secretary')
+    }
+    setEmail(e)
+    setRole(r)
+  }, [router])
+
+  if (role === null) {
+    return (
+      <div className="min-h-[40vh] flex items-center justify-center text-sm text-gray-500">
+        Loading dashboard…
+      </div>
+    )
+  }
+
+  if (role === 'FINANCE') {
+    return (
+      <div className="min-h-[40vh] flex items-center justify-center text-sm text-gray-500">
+        Opening finance desk…
+      </div>
+    )
+  }
+
+  if (role === 'SECRETARY') {
+    return (
+      <div className="min-h-[40vh] flex items-center justify-center text-sm text-gray-500">
+        Opening front desk…
+      </div>
+    )
+  }
+
+  if (role === 'SUPER_ADMIN') {
+    return <SuperAdminDashboard />
+  }
+
+  if (role === 'MANAGER') {
+    return <ManagerDashboard />
+  }
+
+  const profile = getStaffProfileByEmail(email)
+  if (role === 'STAFF' && profile) {
+    return <StaffDashboard profile={profile} />
+  }
+
   return (
-    <div className="flex gap-6">
-      {/* Main Content */}
-      <div className="flex-1 min-w-0">
-        <PageHeader
-          title="Good morning, James"
-          subtitle="Here's what's happening at Ezra Annex today"
-          actions={<div className="text-sm text-gray-500">Monday, 10 March 2026 · 09:15 AM</div>}
-        />
-
-        {/* KPI Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-          <StatCard
-            title="Today's Bookings"
-            value="24"
-            icon={CalendarDays}
-            iconColor="text-blue-600"
-            iconBg="bg-blue-50"
-            accentColor="bg-blue-500"
-            delta="+3 vs yesterday"
-            deltaType="positive"
-          />
-          <StatCard
-            title="Today's Revenue"
-            value="KES 187,500"
-            icon={TrendingUp}
-            iconColor="text-green-600"
-            iconBg="bg-green-50"
-            accentColor="bg-green-500"
-            delta="+12.4%"
-            deltaType="positive"
-          />
-          <StatCard
-            title="Occupancy Rate"
-            value="68%"
-            icon={BarChart3}
-            iconColor="text-teal-600"
-            iconBg="bg-teal-50"
-            accentColor="bg-teal-500"
-            delta="12 of 18 resources"
-            deltaType="neutral"
-          />
-          <StatCard
-            title="Active Customers"
-            value="18"
-            icon={Users}
-            iconColor="text-purple-600"
-            iconBg="bg-purple-50"
-            accentColor="bg-purple-500"
-            delta="on-site now"
-            deltaType="neutral"
-          />
-          <StatCard
-            title="Pending Payments"
-            value="3"
-            icon={AlertCircle}
-            iconColor="text-amber-600"
-            iconBg="bg-amber-50"
-            accentColor="bg-amber-500"
-            delta="requires attention"
-            deltaType="negative"
-          />
-          <StatCard
-            title="Staff On Duty"
-            value="6"
-            icon={UserCheck}
-            iconColor="text-navy"
-            iconBg="bg-gray-100"
-            accentColor="bg-navy"
-            delta="of 8 scheduled"
-            deltaType="neutral"
-          />
-        </div>
-
-        {/* Revenue Chart */}
-        <div className="mb-6">
-          <RevenueChart />
-        </div>
-
-        {/* Two Column: Live Feed + Occupancy */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
-          <div className="lg:col-span-3">
-            <LiveBookingFeed />
-          </div>
-          <div className="lg:col-span-2">
-            <OccupancyGrid />
-          </div>
-        </div>
-
-        {/* Quick Actions */}
-        <QuickActions />
-      </div>
-
-      {/* AI Panel Sidebar */}
-      <div className="w-96 flex-shrink-0 h-[calc(100vh-2rem)] sticky top-4">
-        <AdminAIPanel />
-      </div>
+    <div className="text-sm text-gray-600">
+      Your account is not linked to a staff profile. Sign in with a named staff email or contact Super Admin.
     </div>
   )
 }

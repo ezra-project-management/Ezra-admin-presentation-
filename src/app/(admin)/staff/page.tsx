@@ -10,12 +10,31 @@ import { Avatar } from '@/components/ui/Avatar'
 
 const DEPT_COLORS: Record<string, string> = {
   'salon-spa': 'bg-teal-50 text-teal-700',
-  'barbershop': 'bg-gray-100 text-gray-700',
-  'gym': 'bg-green-50 text-green-700',
-  'boardroom': 'bg-blue-50 text-blue-700',
-  'ballroom': 'bg-amber-50 text-amber-700',
+  barbershop: 'bg-gray-100 text-gray-700',
+  gym: 'bg-green-50 text-green-700',
+  boardroom: 'bg-blue-50 text-blue-700',
+  ballroom: 'bg-amber-50 text-amber-700',
   'banquet-hall': 'bg-orange-50 text-orange-700',
   'swimming-pool': 'bg-cyan-50 text-cyan-700',
+}
+
+const DEPT_LABELS: Record<string, string> = {
+  'salon-spa': 'Salon & Spa',
+  barbershop: 'Barbershop',
+  gym: 'Fitness Centre',
+  boardroom: 'Boardrooms',
+  ballroom: 'Ballroom',
+  'banquet-hall': 'Banquet Hall',
+  'swimming-pool': 'Swimming Pool',
+}
+
+function deptLabel(slug: string) {
+  return DEPT_LABELS[slug] || slug.replace(/-/g, ' ')
+}
+
+const ROLE_HINTS: Record<string, string> = {
+  MANAGER: 'Schedules, approvals, cross-department visibility (demo).',
+  STAFF: 'Bookings, POS, queue, and tools for assigned departments only.',
 }
 
 export default function StaffPage() {
@@ -24,6 +43,14 @@ export default function StaffPage() {
 
   return (
     <div>
+      <div className="bg-gray-50 border border-gray-100 rounded-[10px] p-4 mb-6 text-sm text-gray-600">
+        <p className="font-medium text-gray-900 mb-1">How this fits together</p>
+        <p>
+          Each person has a <strong>role</strong> (what they can do) and one or more <strong>departments</strong> (where they work). Managers cover events
+          spaces; staff are scoped to salon, barber, gym, or pool. This matches the sidebar services and booking filters.
+        </p>
+      </div>
+
       <PageHeader
         title="Staff"
         subtitle={`${MOCK_STAFF.length} team members`}
@@ -49,10 +76,11 @@ export default function StaffPage() {
               <span className={cn('inline-block text-xs px-2 py-0.5 rounded-full mt-1', staff.role === 'MANAGER' ? 'bg-blue-50 text-blue-700' : 'bg-gray-100 text-gray-600')}>
                 {staff.role}
               </span>
+              <p className="text-[11px] text-gray-500 mt-2 px-1 leading-snug">{ROLE_HINTS[staff.role] ?? ROLE_HINTS.STAFF}</p>
               <div className="flex flex-wrap gap-1 justify-center mt-2">
                 {staff.departments.map(dept => (
                   <span key={dept} className={cn('text-[11px] px-2 py-0.5 rounded-full', DEPT_COLORS[dept] || 'bg-gray-50 text-gray-600')}>
-                    {dept.replace(/-/g, ' ')}
+                    {deptLabel(dept)}
                   </span>
                 ))}
               </div>
@@ -84,7 +112,15 @@ export default function StaffPage() {
                 <tr key={staff.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3"><div className="flex items-center gap-2"><Avatar name={staff.name} size="sm" /><span className="text-sm font-medium">{staff.name}</span></div></td>
                   <td className="px-4 py-3"><span className={cn('text-xs px-2 py-0.5 rounded-full', staff.role === 'MANAGER' ? 'bg-blue-50 text-blue-700' : 'bg-gray-100 text-gray-600')}>{staff.role}</span></td>
-                  <td className="px-4 py-3"><div className="flex flex-wrap gap-1">{staff.departments.map(d => <span key={d} className="text-[10px] bg-gray-50 text-gray-600 px-1.5 py-0.5 rounded">{d.replace(/-/g, ' ')}</span>)}</div></td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap gap-1">
+                      {staff.departments.map(d => (
+                        <span key={d} className="text-[10px] bg-gray-50 text-gray-600 px-1.5 py-0.5 rounded">
+                          {deptLabel(d)}
+                        </span>
+                      ))}
+                    </div>
+                  </td>
                   <td className="px-4 py-3 text-sm text-gray-600">{staff.phone}</td>
                   <td className="px-4 py-3"><div className="flex items-center gap-1.5 text-xs"><span className={cn('w-2 h-2 rounded-full', staff.isOnDuty ? 'bg-green-500' : 'bg-gray-400')} />{staff.isOnDuty ? 'On Duty' : 'Off Duty'}</div></td>
                   <td className="px-4 py-3 text-sm text-gray-500">{formatDate(staff.joinDate)}</td>

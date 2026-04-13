@@ -1,186 +1,114 @@
 'use client'
 
-import { useState } from 'react'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { clearSession, getSessionEmail, getSessionRole } from '@/lib/admin-session'
+import { filterNavGroups, filterServiceBubbles, type NavGroup } from '@/lib/nav-config'
+import { getStaffProfileByEmail, ROLE_LABELS, type PortalRole } from '@/lib/roles'
 import { cn } from '@/lib/utils'
-import {
-  LayoutDashboard, CalendarDays, ShoppingCart, Scissors, Dumbbell, Monitor, Music,
-  UtensilsCrossed, Waves, Users, UserCheck, TrendingUp, CreditCard, BarChart3,
-  LineChart, MessageSquare, Settings, Shield, ScrollText, ChevronDown, LogOut,
-} from 'lucide-react'
+import { ChevronDown, LogOut } from 'lucide-react'
 
 interface AdminSidebarProps {
   collapsed: boolean
   onToggle: () => void
 }
 
-interface NavItem {
-  label: string
-  href: string
-  icon: React.ElementType
-  children?: { label: string; href: string }[]
+function initialsFromName(name: string): string {
+  const p = name.trim().split(/\s+/)
+  if (p.length >= 2) return (p[0][0] + p[p.length - 1][0]).toUpperCase()
+  return name.slice(0, 2).toUpperCase() || 'EA'
 }
-
-interface NavGroup {
-  label: string
-  items: NavItem[]
-}
-
-/* ─── Service Bubbles ─── */
-const SERVICE_BUBBLES = [
-  { label: 'Salon', icon: Scissors, image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=120&h=120&fit=crop&q=80', count: 5, href: '/services/salon-spa' },
-  { label: 'Gym', icon: Dumbbell, image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=120&h=120&fit=crop&q=80', count: 3, href: '/services/gym' },
-{ label: 'Pool', icon: Waves, image: '/images/image-resizing-10.avif', count: 1, href: '/services/swimming-pool' },
-  { label: 'Events', icon: Music, image: '/images/hero-banquet.jpeg', count: 2, href: '/services/ballroom' },
-  { label: 'Board', icon: Monitor, image: '/images/image-resizing-6.avif', count: 4, href: '/services/boardroom' },
-]
-
-const NAV_GROUPS: NavGroup[] = [
-  {
-    label: 'OVERVIEW',
-    items: [
-      { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    ],
-  },
-  {
-    label: 'OPERATIONS',
-    items: [
-      {
-        label: 'Bookings', href: '/bookings', icon: CalendarDays,
-        children: [
-          { label: 'All Bookings', href: '/bookings' },
-          { label: 'Calendar View', href: '/bookings/calendar' },
-          { label: 'Walk-in Queue', href: '/bookings/queue' },
-        ],
-      },
-      {
-        label: 'Point of Sale', href: '/pos/new', icon: ShoppingCart,
-        children: [
-          { label: 'New Transaction', href: '/pos/new' },
-          { label: 'Transactions', href: '/pos/transactions' },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'SERVICES',
-    items: [
-      { label: 'Salon & Spa', href: '/services/salon-spa', icon: Scissors },
-      { label: 'Barbershop', href: '/services/barbershop', icon: Scissors },
-      { label: 'Fitness Centre', href: '/services/gym', icon: Dumbbell },
-      { label: 'Boardrooms', href: '/services/boardroom', icon: Monitor },
-      { label: 'Ballroom', href: '/services/ballroom', icon: Music },
-      { label: 'Banquet Hall', href: '/services/banquet-hall', icon: UtensilsCrossed },
-      { label: 'Swimming Pool', href: '/services/swimming-pool', icon: Waves },
-    ],
-  },
-  {
-    label: 'MANAGEMENT',
-    items: [
-      { label: 'Customers', href: '/customers', icon: Users },
-      {
-        label: 'Staff', href: '/staff', icon: UserCheck,
-        children: [
-          { label: 'Staff List', href: '/staff' },
-          { label: 'Schedule', href: '/staff/schedule' },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'FINANCE',
-    items: [
-      { label: 'Revenue', href: '/finance/revenue', icon: TrendingUp },
-      { label: 'Payments', href: '/finance/payments', icon: CreditCard },
-    ],
-  },
-  {
-    label: 'INSIGHTS',
-    items: [
-      { label: 'Occupancy', href: '/analytics/occupancy', icon: BarChart3 },
-      { label: 'Booking Trends', href: '/analytics/bookings', icon: LineChart },
-    ],
-  },
-  {
-    label: 'SYSTEM',
-    items: [
-      {
-        label: 'Communications', href: '/communications/sms', icon: MessageSquare,
-        children: [
-          { label: 'SMS Centre', href: '/communications/sms' },
-          { label: 'Templates', href: '/communications/templates' },
-        ],
-      },
-      { label: 'Settings', href: '/system/settings', icon: Settings },
-      { label: 'Users & Roles', href: '/system/users', icon: Shield },
-      { label: 'Audit Log', href: '/system/audit-log', icon: ScrollText },
-    ],
-  },
-]
 
 export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
+  const router = useRouter()
   const pathname = usePathname()
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({})
+  const [role, setRole] = useState<PortalRole | null>(null)
+  const [email, setEmail] = useState('')
+
+  useLayoutEffect(() => {
+    setEmail(getSessionEmail())
+    setRole(getSessionRole())
+  }, [pathname])
+
+  const navGroups = useMemo(() => {
+    const r = role ?? 'STAFF'
+    return filterNavGroups(r, email)
+  }, [role, email])
+
+  const bubbles = useMemo(() => {
+    const r = role ?? 'STAFF'
+    return filterServiceBubbles(r, email)
+  }, [role, email])
+
+  const displayName = useMemo(() => {
+    const p = getStaffProfileByEmail(email)
+    return p?.name ?? (email.split('@')[0] || 'User')
+  }, [email])
+
+  const roleLabel = role ? ROLE_LABELS[role] : '…'
+
+  const avatarLetters = useMemo(() => {
+    const p = getStaffProfileByEmail(email)
+    return initialsFromName(p?.name ?? email)
+  }, [email])
 
   const toggleExpand = (label: string) => {
     setExpandedItems(prev => ({ ...prev, [label]: !prev[label] }))
   }
 
-  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
+  const isActive = (href: string) =>
+    pathname === href || (href !== '/finance' && pathname.startsWith(href + '/'))
+
+  const handleLogout = () => {
+    clearSession()
+    router.push('/auth/login')
+  }
 
   return (
     <aside
       className="fixed left-0 top-0 h-full sidebar-gradient z-40 flex flex-col transition-all duration-300 overflow-hidden"
       style={{ width: collapsed ? 56 : 240 }}
     >
-      {/* Logo */}
-      <div className="relative h-16 flex items-center px-4 border-b border-gold/12 shrink-0 z-10">
+      <div className="relative h-14 flex items-center px-3 border-b border-slate-700/80 shrink-0 z-10">
         {collapsed ? (
-          <div className="w-9 h-9 mx-auto rounded-xl bg-gradient-to-br from-gold via-amber-400 to-gold flex items-center justify-center shadow-lg shadow-gold/20 animate-glow-amber">
-            <span className="font-mono font-bold text-navy text-sm tracking-tight">EA</span>
+          <div className="w-8 h-8 mx-auto rounded-md bg-slate-800 border border-slate-600/80 flex items-center justify-center">
+            <span className="font-mono text-[11px] font-semibold text-slate-200 tracking-tight">EA</span>
           </div>
         ) : (
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gold via-amber-400 to-gold flex items-center justify-center shadow-lg shadow-gold/20 animate-glow-amber ring-1 ring-gold/30">
-              <span className="font-mono font-bold text-navy text-sm">EA</span>
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-md bg-slate-800 border border-slate-600/80 flex items-center justify-center shrink-0">
+              <span className="font-mono text-[11px] font-semibold text-slate-200">EA</span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-[13px] font-semibold text-white leading-tight tracking-wide">Ezra Annex</span>
-              <span className="text-[9px] font-semibold uppercase tracking-[0.15em] bg-gradient-to-r from-gold to-amber-300 bg-clip-text text-transparent">Management</span>
+            <div className="flex flex-col min-w-0">
+              <span className="text-[13px] font-semibold text-slate-100 leading-tight truncate">Ezra Annex</span>
+              <span className="text-[10px] font-medium uppercase tracking-wider text-slate-500">{roleLabel}</span>
             </div>
           </div>
         )}
       </div>
 
-      {/* Service Bubbles — Image Grid */}
-      {!collapsed && (
-        <div className="px-3 pt-4 pb-3 border-b border-gold/10">
+      {!collapsed && bubbles.length > 0 && (
+        <div className="px-3 pt-3 pb-3 border-b border-slate-700/80">
           <div className="grid grid-cols-3 gap-2">
-            {SERVICE_BUBBLES.map((svc, i) => (
-              <Link
-                key={svc.label}
-                href={svc.href}
-                className="service-bubble group flex flex-col items-center"
-                style={{ animationDelay: `${i * 0.08}s` }}
-              >
-                <div className="relative w-[58px] h-[58px] rounded-[16px] overflow-hidden ring-1 ring-gold/20 group-hover:ring-gold/50 transition-all duration-300 shadow-lg group-hover:shadow-gold/20">
+            {bubbles.map(svc => (
+              <Link key={svc.label} href={svc.href} className="service-bubble group flex flex-col items-center">
+                <div className="relative w-[52px] h-[52px] rounded-lg overflow-hidden ring-1 ring-slate-600/80 group-hover:ring-slate-500 transition-all">
                   <Image
                     src={svc.image}
                     alt={svc.label}
                     fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                    sizes="58px"
+                    className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                    sizes="52px"
                   />
-                  {/* Gold overlay sheen */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-gold/10 group-hover:from-black/30 transition-all duration-300" />
-                  {/* Count badge */}
-                  <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] rounded-full bg-gradient-to-br from-gold to-amber-400 text-[9px] font-bold text-navy flex items-center justify-center shadow-md px-1 z-10">
+                  <div className="absolute inset-0 bg-black/25 group-hover:bg-black/15 transition-colors" />
+                  <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded bg-slate-900/85 text-[9px] font-semibold text-slate-200 flex items-center justify-center z-10 border border-slate-600/50">
                     {svc.count}
                   </span>
                 </div>
-                <span className="text-[10px] text-gold/70 mt-1.5 font-medium group-hover:text-gold transition-colors tracking-wide">
+                <span className="text-[10px] text-slate-500 mt-1.5 font-medium group-hover:text-slate-300 transition-colors">
                   {svc.label}
                 </span>
               </Link>
@@ -189,19 +117,18 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
         </div>
       )}
 
-      {/* Collapsed bubbles - image thumbnails */}
-      {collapsed && (
-        <div className="flex flex-col items-center gap-2 py-3 border-b border-gold/10">
-          {SERVICE_BUBBLES.slice(0, 4).map(svc => (
+      {collapsed && bubbles.length > 0 && (
+        <div className="flex flex-col items-center gap-2 py-3 border-b border-slate-700/80">
+          {bubbles.slice(0, 4).map(svc => (
             <Link
               key={svc.label}
               href={svc.href}
-              className="relative w-9 h-9 rounded-xl overflow-hidden service-bubble ring-1 ring-gold/20 hover:ring-gold/50 transition-all shadow-sm hover:shadow-gold/15"
+              className="relative w-9 h-9 rounded-lg overflow-hidden service-bubble ring-1 ring-slate-600/80 hover:ring-slate-500 transition-all"
               title={svc.label}
             >
               <Image src={svc.image} alt={svc.label} fill className="object-cover" sizes="36px" />
               <div className="absolute inset-0 bg-black/20" />
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-gradient-to-br from-gold to-amber-400 text-[7px] font-bold text-navy flex items-center justify-center shadow-sm z-10">
+              <span className="absolute top-0.5 right-0.5 w-3.5 h-3.5 rounded text-[6px] font-bold bg-slate-900/90 text-slate-200 flex items-center justify-center z-10 border border-slate-600/60">
                 {svc.count}
               </span>
             </Link>
@@ -209,12 +136,11 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
         </div>
       )}
 
-      {/* Navigation */}
       <nav className="flex-1 overflow-y-auto py-2">
-        {NAV_GROUPS.map(group => (
+        {navGroups.map((group: NavGroup) => (
           <div key={group.label} className="mb-0.5">
             {!collapsed && (
-              <div className="text-[9px] font-bold text-gold/35 uppercase tracking-[0.2em] px-4 mb-1 mt-5 first:mt-2">
+              <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider px-4 mb-1 mt-4 first:mt-2">
                 {group.label}
               </div>
             )}
@@ -230,21 +156,22 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                     <Link
                       href={item.href}
                       className={cn(
-                        'sidebar-nav-item flex items-center gap-3 px-3 py-2 text-sm rounded-lg mx-2 transition-all flex-1',
+                        'sidebar-nav-item flex items-center gap-3 px-3 py-2 text-[13px] rounded-md mx-2 flex-1',
                         active
-                          ? 'active text-white bg-white/12 font-medium backdrop-blur-sm'
-                          : 'text-white/70 hover:text-white hover:bg-white/8',
+                          ? 'active text-slate-50 font-medium'
+                          : 'text-slate-400 hover:text-slate-100',
                         collapsed && 'justify-center px-0'
                       )}
                       title={collapsed ? item.label : undefined}
                     >
-                      <Icon className={cn('w-4 h-4 shrink-0 transition-colors', active ? 'text-gold' : '')} />
+                      <Icon className={cn('w-4 h-4 shrink-0', active ? 'text-slate-200' : 'text-slate-500')} />
                       {!collapsed && <span className="truncate">{item.label}</span>}
                     </Link>
                     {hasChildren && !collapsed && (
                       <button
+                        type="button"
                         onClick={() => toggleExpand(item.label)}
-                        className="p-1 mr-2 text-gold/40 hover:text-white transition-colors"
+                        className="p-1 mr-2 text-slate-500 hover:text-slate-300 transition-colors"
                         aria-label={`Toggle ${item.label}`}
                       >
                         <ChevronDown className={cn('w-3.5 h-3.5 transition-transform duration-200', isExpanded && 'rotate-180')} />
@@ -252,16 +179,16 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
                     )}
                   </div>
                   {hasChildren && isExpanded && !collapsed && (
-                    <div className="ml-6 border-l border-gold/10 mt-0.5 mb-1">
+                    <div className="ml-6 border-l border-slate-700 mt-0.5 mb-1">
                       {item.children!.map(child => (
                         <Link
                           key={child.href}
                           href={child.href}
                           className={cn(
-                            'block pl-4 pr-3 py-1.5 text-xs rounded-r-md mx-2 transition-all',
+                            'block pl-4 pr-3 py-1.5 text-[12px] rounded-r-md mx-2 transition-colors',
                             pathname === child.href
-                              ? 'text-gold font-medium bg-white/10'
-                              : 'text-amber-200/60 hover:text-white hover:bg-white/5'
+                              ? 'text-slate-100 font-medium bg-white/5'
+                              : 'text-slate-500 hover:text-slate-200 hover:bg-white/[0.03]'
                           )}
                         >
                           {child.label}
@@ -276,27 +203,26 @@ export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {
         ))}
       </nav>
 
-      {/* User section */}
-      <div className="relative border-t border-gold/12 p-3 shrink-0 z-10">
+      <div className="relative border-t border-slate-700/80 p-3 shrink-0 z-10">
         {collapsed ? (
           <div className="flex flex-col items-center gap-2">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold to-amber-500 text-navy text-xs font-bold flex items-center justify-center shadow-lg shadow-gold/15 ring-2 ring-gold/20">
-              JK
+            <div className="w-9 h-9 rounded-md bg-slate-800 border border-slate-600/80 text-slate-200 text-[10px] font-semibold flex items-center justify-center">
+              {avatarLetters}
             </div>
-            <button className="text-gold/40 hover:text-red-400 transition-colors" aria-label="Logout">
+            <button type="button" onClick={handleLogout} className="text-slate-500 hover:text-red-400 transition-colors" aria-label="Logout">
               <LogOut className="w-3.5 h-3.5" />
             </button>
           </div>
         ) : (
-          <div className="flex items-center gap-3 bg-gradient-to-r from-gold/8 to-transparent rounded-xl p-2.5 border border-gold/8 hover:border-gold/15 transition-all duration-300">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gold via-amber-400 to-gold text-navy text-xs font-bold flex items-center justify-center shrink-0 shadow-lg shadow-gold/15 ring-2 ring-gold/20">
-              JK
+          <div className="flex items-center gap-3 rounded-lg p-2 border border-slate-700/80 bg-slate-800/40">
+            <div className="w-9 h-9 rounded-md bg-slate-800 border border-slate-600/80 text-slate-200 text-[10px] font-semibold flex items-center justify-center shrink-0">
+              {avatarLetters}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-[13px] font-medium text-white truncate">James Kariuki</div>
-              <div className="text-[10px] font-medium bg-gradient-to-r from-gold to-amber-300 bg-clip-text text-transparent">Manager</div>
+              <div className="text-[13px] font-medium text-slate-100 truncate">{displayName}</div>
+              <div className="text-[10px] font-medium text-slate-500 truncate">{roleLabel}</div>
             </div>
-            <button className="text-gold/30 hover:text-red-400 transition-colors" aria-label="Logout">
+            <button type="button" onClick={handleLogout} className="text-slate-500 hover:text-red-400 transition-colors p-1" aria-label="Logout">
               <LogOut className="w-4 h-4" />
             </button>
           </div>

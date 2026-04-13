@@ -1,12 +1,13 @@
 'use client'
 
-import { useState } from 'react'
-import { Shield, Download, Search } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { Shield, Download, Search, RefreshCw } from 'lucide-react'
 import { formatDateTime, cn } from '@/lib/utils'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { toast } from 'sonner'
+import { getCustomAuditEntries, type AuditEntry } from '@/lib/audit-store'
 
-const AUDIT_ENTRIES = [
+const AUDIT_ENTRIES: AuditEntry[] = [
   { id: 'a-1', timestamp: '2026-03-10T09:15:00Z', admin: 'James Kariuki', action: 'LOGIN', entity: 'Session', entityId: 'sess-001', ip: '192.168.1.100', details: 'Admin login from Chrome/Mac' },
   { id: 'a-2', timestamp: '2026-03-10T09:20:00Z', admin: 'James Kariuki', action: 'UPDATE', entity: 'Booking', entityId: 'bk-002', ip: '192.168.1.100', details: 'Status changed: CONFIRMED → CHECKED_IN' },
   { id: 'a-3', timestamp: '2026-03-10T08:45:00Z', admin: 'Grace Mwangi', action: 'CREATE', entity: 'Booking', entityId: 'bk-006', ip: '192.168.1.101', details: 'New booking created for Brian Mutua' },
@@ -28,10 +29,22 @@ const ACTION_STYLES: Record<string, string> = {
 export default function AuditLogPage() {
   const [actionFilter, setActionFilter] = useState('')
   const [search, setSearch] = useState('')
+  const [refreshKey, setRefreshKey] = useState(0)
 
-  const filtered = AUDIT_ENTRIES.filter(e => {
+  const merged = useMemo(() => {
+    const custom = getCustomAuditEntries()
+    return [...custom, ...AUDIT_ENTRIES].sort(
+      (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    )
+  }, [refreshKey])
+
+  const filtered = merged.filter(e => {
     const matchAction = !actionFilter || e.action === actionFilter
-    const matchSearch = !search || e.admin.toLowerCase().includes(search.toLowerCase()) || e.details.toLowerCase().includes(search.toLowerCase())
+    const matchSearch =
+      !search ||
+      e.admin.toLowerCase().includes(search.toLowerCase()) ||
+      e.details.toLowerCase().includes(search.toLowerCase()) ||
+      e.entityId.toLowerCase().includes(search.toLowerCase())
     return matchAction && matchSearch
   })
 
@@ -39,18 +52,54 @@ export default function AuditLogPage() {
     <div>
       <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg p-3 text-sm mb-6">
         <Shield className="w-4 h-4 shrink-0" />
-        This log is read-only and cannot be modified.
+        Built-in entries are sample data. Actions from Users & Roles in this browser appear at the top.
       </div>
 
-      <PageHeader title="Audit Log" subtitle="System activity trail" actions={<button onClick={() => toast.success('CSV export started')} className="flex items-center gap-1.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-[7px] px-3 py-2 hover:bg-gray-50"><Download className="w-4 h-4" />Export CSV</button>} />
+      <PageHeader
+        title="Audit Log"
+        subtitle="System activity trail"
+        actions={
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setRefreshKey(k => k + 1)
+                toast.success('Log refreshed')
+              }}
+              className="flex items-center gap-1.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-[7px] px-3 py-2 hover:bg-gray-50"
+            >
+              <RefreshCw className="w-4 h-4" />
+              Refresh
+            </button>
+            <button
+              type="button"
+              onClick={() => toast.success('CSV export started')}
+              className="flex items-center gap-1.5 text-sm font-medium text-gray-600 border border-gray-200 rounded-[7px] px-3 py-2 hover:bg-gray-50"
+            >
+              <Download className="w-4 h-4" />
+              Export CSV
+            </button>
+          </div>
+        }
+      />
 
       <div className="bg-white rounded-[10px] border border-gray-100 shadow-[var(--shadow-card)] p-4 mb-6">
         <div className="flex flex-wrap gap-3 items-center">
           <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search audit log..." className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-[7px] focus:outline-none focus:ring-2 focus:ring-brand/20" />
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search audit log..."
+              className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-[7px] focus:outline-none focus:ring-2 focus:ring-brand/20"
+            />
           </div>
-          <select value={actionFilter} onChange={e => setActionFilter(e.target.value)} className="text-sm border border-gray-200 rounded-[7px] px-3 py-2 text-gray-600">
+          <select
+            value={actionFilter}
+            onChange={e => setActionFilter(e.target.value)}
+            className="text-sm border border-gray-200 rounded-[7px] px-3 py-2 text-gray-600"
+          >
             <option value="">All Actions</option>
             <option value="CREATE">Create</option>
             <option value="UPDATE">Update</option>
@@ -64,25 +113,33 @@ export default function AuditLogPage() {
       <div className="bg-white rounded-[10px] border border-gray-100 shadow-[var(--shadow-card)] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead><tr className="bg-gray-50/80 border-b border-gray-100">
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Timestamp</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Admin</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Action</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Entity</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Entity ID</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">IP Address</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Details</th>
-            </tr></thead>
+            <thead>
+              <tr className="bg-gray-50/80 border-b border-gray-100">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Timestamp</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Admin</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Action</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Entity</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Entity ID</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">IP Address</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Details</th>
+              </tr>
+            </thead>
             <tbody className="divide-y divide-gray-100">
               {filtered.map(entry => (
                 <tr key={entry.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3 text-xs text-gray-600 whitespace-nowrap">{formatDateTime(entry.timestamp)}</td>
                   <td className="px-4 py-3 text-sm">{entry.admin}</td>
-                  <td className="px-4 py-3"><span className={cn('text-[10px] font-medium px-2 py-0.5 rounded-full', ACTION_STYLES[entry.action])}>{entry.action}</span></td>
+                  <td className="px-4 py-3">
+                    <span className={cn('text-[10px] font-medium px-2 py-0.5 rounded-full', ACTION_STYLES[entry.action])}>
+                      {entry.action}
+                    </span>
+                  </td>
                   <td className="px-4 py-3 text-sm text-gray-700">{entry.entity}</td>
                   <td className="px-4 py-3 font-mono text-xs text-gray-400">{entry.entityId}</td>
                   <td className="px-4 py-3 font-mono text-xs text-gray-400">{entry.ip}</td>
-                  <td className="px-4 py-3 text-sm text-gray-600 max-w-[250px] truncate" title={entry.details}>{entry.details}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600 max-w-[250px] truncate" title={entry.details}>
+                    {entry.details}
+                  </td>
                 </tr>
               ))}
             </tbody>
