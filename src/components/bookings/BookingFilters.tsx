@@ -19,11 +19,23 @@ type BookingFiltersProps = {
   staffOptions: string[]
   /** Staff role: hide provider filter (already scoped to you). */
   hideStaffFilter?: boolean
+  /** Staff: search only reference / internal guest labels — no phone or email. */
+  searchPlaceholder?: string
+  /** First option label in the guest/customer dropdown */
+  customerFilterAllLabel?: string
 }
 
 const SERVICES = ['Salon & Spa', 'Boardroom', 'Ballroom', 'Gym', 'Barbershop', 'Swimming Pool', 'Banquet Hall']
 
-export function BookingFilters({ values, onChange, customerOptions, staffOptions, hideStaffFilter }: BookingFiltersProps) {
+export function BookingFilters({
+  values,
+  onChange,
+  customerOptions,
+  staffOptions,
+  hideStaffFilter,
+  searchPlaceholder = 'Reference, customer, phone…',
+  customerFilterAllLabel = 'All customers',
+}: BookingFiltersProps) {
   const patch = (partial: Partial<BookingsFilterValues>) => onChange({ ...values, ...partial })
 
   const clearFilters = () => {
@@ -54,7 +66,7 @@ export function BookingFilters({ values, onChange, customerOptions, staffOptions
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Reference, customer, phone…"
+            placeholder={searchPlaceholder}
             value={values.search}
             onChange={e => patch({ search: e.target.value })}
             className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-[var(--input-radius)] focus:outline-none focus:ring-2 focus:ring-brand/20 focus:border-brand"
@@ -65,7 +77,7 @@ export function BookingFilters({ values, onChange, customerOptions, staffOptions
           onChange={e => patch({ customer: e.target.value })}
           className="text-sm border border-gray-200 rounded-[var(--input-radius)] px-3 py-2 text-gray-600 focus:outline-none focus:ring-2 focus:ring-brand/20 min-w-[160px]"
         >
-          <option value="">All customers</option>
+          <option value="">{customerFilterAllLabel}</option>
           {customerOptions.map(c => (
             <option key={c} value={c}>
               {c}

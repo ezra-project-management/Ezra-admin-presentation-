@@ -85,10 +85,10 @@ const PREFIXES: Record<Exclude<PortalRole, 'SUPER_ADMIN'>, string[]> = {
     '/communications',
     '/analytics',
   ],
+  // Staff: no `/pos/new` (checkout collects phone / payment identifiers) — managers & front desk only.
   STAFF: [
     '/dashboard',
     '/bookings',
-    '/pos/new',
     '/pos/transactions',
     '/services',
     '/staff',
@@ -118,7 +118,6 @@ export function canAccessPath(role: PortalRole, pathname: string, email: string)
     if (p.startsWith('/customers')) return false
     if (p.startsWith('/analytics')) return false
     if (p.startsWith('/finance')) return false
-    if (p.startsWith('/pos/new')) return true
     if (p.startsWith('/pos/transactions')) return true
     if (p.startsWith('/bookings')) return true
     if (p.startsWith('/dashboard')) return true

@@ -10,6 +10,7 @@ import { useBookings } from '@/context/bookings-context'
 import { filterBookingsForStaffMember } from '@/lib/staff-bookings'
 import { formatCurrency, formatDateTime } from '@/lib/utils'
 import { CalendarDays, Clock, XCircle, ArrowRight, Banknote, Sparkles } from 'lucide-react'
+import { buildClientPrivacyRegistry, getStaffSafeClientPresentation } from '@/lib/customer-privacy'
 
 /** Demo: service credit attributed to provider after paid / completed session. */
 const SERVICE_CREDIT_RATE = 0.12
@@ -18,13 +19,14 @@ type StaffDashboardProps = {
   profile: StaffMember
 }
 
-function guestLabelForStaff(b: Booking): string {
-  return `Guest · ${b.reference}`
-}
-
 export function StaffDashboard({ profile }: StaffDashboardProps) {
   const { bookings } = useBookings()
   const mine = useMemo(() => filterBookingsForStaffMember(bookings, profile), [bookings, profile])
+  const privacyRegistry = useMemo(() => buildClientPrivacyRegistry(mine), [mine])
+  const guestLabelForStaff = (b: Booking) => {
+    const pres = getStaffSafeClientPresentation(b, privacyRegistry)
+    return `${pres.displayName} · ${pres.userId}`
+  }
   const upcoming = useMemo(
     () =>
       mine
@@ -54,7 +56,7 @@ export function StaffDashboard({ profile }: StaffDashboardProps) {
     <div className="space-y-6">
       <PageHeader
         title={`Hi, ${profile.name.split(' ')[0]}`}
-        subtitle="Your lane only — names are masked on this screen until guests check in at the desk."
+        subtitle="Your lane only — guest names and contacts stay masked; use Client labels and IDs."
         actions={
           <Link
             href="/bookings"
@@ -67,8 +69,8 @@ export function StaffDashboard({ profile }: StaffDashboardProps) {
       />
 
       <div className="rounded-lg border border-emerald-200/80 bg-emerald-50/80 text-emerald-950 text-[13px] px-4 py-3 leading-relaxed">
-        <span className="font-medium">Privacy:</span> you see service, time, and reference. Guest legal names are
-        hidden here by design — same standard as premium hotel back-of-house tools.
+        <span className="font-medium">Privacy:</span> you see service, time, and booking reference. Guest legal names,
+        phone, and email are never shown on staff accounts — only Client N and internal user IDs (CLI-XXXX).
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

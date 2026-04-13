@@ -3,13 +3,21 @@
 import { ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import { REVENUE_DAILY } from '@/lib/mock-data'
 
-function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) {
+function CustomTooltip({
+  active,
+  payload,
+  label,
+}: {
+  active?: boolean
+  payload?: Array<{ name: string; value: number; color: string }>
+  label?: string
+}) {
   if (!active || !payload) return null
   return (
-    <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-3">
-      <p className="text-sm font-medium text-gray-900 mb-1">{label}</p>
+    <div className="rounded-xl border border-slate-200/90 bg-white/95 px-3 py-2.5 shadow-lg backdrop-blur-md">
+      <p className="mb-1.5 text-sm font-semibold text-slate-900">{label}</p>
       {payload.map((entry, i) => (
-        <p key={i} className="text-xs" style={{ color: entry.color }}>
+        <p key={i} className="text-xs font-medium tabular-nums" style={{ color: entry.color }}>
           {entry.name}: KSh {entry.value.toLocaleString()}
         </p>
       ))}
@@ -19,22 +27,46 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
 
 export function RevenueBarChart() {
   return (
-    <div className="w-full h-[280px]">
+    <div className="h-[280px] w-full min-h-[200px] min-w-0">
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={REVENUE_DAILY} margin={{ top: 8, right: 20, bottom: 5, left: 12 }}>
+        <ComposedChart data={REVENUE_DAILY} margin={{ top: 12, right: 12, bottom: 4, left: 4 }}>
           <defs>
             <linearGradient id="revenueBarFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#1976D2" stopOpacity={1} />
-              <stop offset="100%" stopColor="#0F2C4A" stopOpacity={0.95} />
+              <stop offset="0%" stopColor="#42A5F5" stopOpacity={1} />
+              <stop offset="55%" stopColor="#1976D2" stopOpacity={1} />
+              <stop offset="100%" stopColor="#0F2C4A" stopOpacity={0.98} />
+            </linearGradient>
+            <linearGradient id="revenueLineGlow" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#E2C87A" />
+              <stop offset="100%" stopColor="#C9A84C" />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#E8ECF2" vertical={false} />
-          <XAxis dataKey="day" fontSize={12} tickLine={false} axisLine={{ stroke: '#E5E7EB' }} />
-          <YAxis fontSize={12} tickLine={false} axisLine={{ stroke: '#E5E7EB' }} tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}K`} />
-          <Tooltip content={<CustomTooltip />} />
-          <Legend wrapperStyle={{ fontSize: 12 }} />
-          <Bar dataKey="revenue" name="Revenue" fill="url(#revenueBarFill)" radius={[6, 6, 0, 0]} barSize={34} />
-          <Line dataKey="target" name="Daily target" stroke="#C9A84C" strokeDasharray="5 4" dot={{ r: 3, fill: '#C9A84C', strokeWidth: 0 }} strokeWidth={2} />
+          <CartesianGrid strokeDasharray="3 6" stroke="#E2E8F0" vertical={false} strokeOpacity={0.85} />
+          <XAxis
+            dataKey="day"
+            tick={{ fill: '#64748B', fontSize: 11 }}
+            tickLine={false}
+            axisLine={{ stroke: '#E2E8F0' }}
+          />
+          <YAxis
+            tick={{ fill: '#64748B', fontSize: 11 }}
+            tickLine={false}
+            axisLine={{ stroke: '#E2E8F0' }}
+            tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}k`}
+          />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(21, 101, 192, 0.06)' }} />
+          <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
+          <Bar dataKey="revenue" name="Revenue" fill="url(#revenueBarFill)" radius={[8, 8, 0, 0]} barSize={36} maxBarSize={48} />
+          <Line
+            type="monotone"
+            dataKey="target"
+            name="Daily target"
+            stroke="url(#revenueLineGlow)"
+            strokeDasharray="6 4"
+            dot={{ r: 3, fill: '#C9A84C', strokeWidth: 0 }}
+            strokeWidth={2.5}
+            activeDot={{ r: 5, fill: '#C9A84C', stroke: '#fff', strokeWidth: 2 }}
+          />
         </ComposedChart>
       </ResponsiveContainer>
     </div>

@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useLayoutEffect } from 'react'
 import { CalendarDays, DollarSign, Star, ImageIcon, X, ChevronLeft, ChevronRight, Save } from 'lucide-react'
 import { toast } from 'sonner'
 import { useBookings } from '@/context/bookings-context'
@@ -12,6 +12,9 @@ import { PageHeader } from '@/components/ui/PageHeader'
 import { StatCard } from '@/components/ui/StatCard'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { bookingServiceForSlug, serviceTitle } from '@/lib/service-slugs'
+import { getSessionRole } from '@/lib/admin-session'
+import { buildClientPrivacyRegistry, getCustomerPresentation, shouldMaskCustomerPii } from '@/lib/customer-privacy'
+import type { PortalRole } from '@/lib/roles'
 
 type DeptSettings = { acceptingBookings: boolean; staffNote: string; leadTimeHours: number }
 
@@ -210,6 +213,14 @@ export default function ServicePage() {
   ]
 
   const bookings = allBookings.filter((b) => b.service === bookingServiceName).slice(0, 5)
+  const [portalRole, setPortalRole] = useState<PortalRole | null>(null)
+
+  useLayoutEffect(() => {
+    setPortalRole(getSessionRole())
+  }, [])
+
+  const privacyRegistry = useMemo(() => buildClientPrivacyRegistry(bookings), [bookings])
+  const maskCustomerPii = shouldMaskCustomerPii(portalRole)
 
   return (
     <div>
@@ -240,7 +251,9 @@ export default function ServicePage() {
         <div className="p-4 border-b border-gray-100"><h3 className="text-sm font-semibold text-gray-900">Recent Bookings</h3></div>
         <table className="w-full">
           <thead><tr className="bg-gray-50/80 border-b border-gray-100">
-            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Customer</th>
+            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">
+              {maskCustomerPii ? 'Guest' : 'Customer'}
+            </th>
             <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Date</th>
             <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Status</th>
             <th className="px-4 py-2 text-right text-xs font-semibold text-gray-500 uppercase">Amount</th>
@@ -250,7 +263,9 @@ export default function ServicePage() {
               <tr><td colSpan={4} className="px-4 py-8 text-center text-sm text-gray-400">No bookings for this service</td></tr>
             ) : bookings.map(b => (
               <tr key={b.id} className="hover:bg-gray-50">
-                <td className="px-4 py-2 text-sm">{b.customer.name}</td>
+                <td className="px-4 py-2 text-sm">
+                  {getCustomerPresentation(b, privacyRegistry, maskCustomerPii).displayName}
+                </td>
                 <td className="px-4 py-2 text-sm text-gray-600">{formatDate(b.startAt)}</td>
                 <td className="px-4 py-2"><StatusBadge status={b.status} /></td>
                 <td className="px-4 py-2 text-sm font-medium text-right">{formatCurrency(b.amount)}</td>

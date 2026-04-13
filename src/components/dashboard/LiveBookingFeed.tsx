@@ -1,12 +1,16 @@
 'use client'
 
 import Link from 'next/link'
+import { useLayoutEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { X } from 'lucide-react'
 import { toast } from 'sonner'
 import { useBookings } from '@/context/bookings-context'
 import { formatTime, cn } from '@/lib/utils'
 import { StatusBadge } from '@/components/ui/StatusBadge'
+import { getSessionRole } from '@/lib/admin-session'
+import type { PortalRole } from '@/lib/roles'
+import { buildClientPrivacyRegistry, getCustomerPresentation, shouldMaskCustomerPii } from '@/lib/customer-privacy'
 
 const SERVICE_COLORS: Record<string, string> = {
   'Salon & Spa': 'bg-teal-500',
@@ -20,6 +24,14 @@ const SERVICE_COLORS: Record<string, string> = {
 
 export function LiveBookingFeed() {
   const { bookings, updateBookingStatus } = useBookings()
+  const [portalRole, setPortalRole] = useState<PortalRole | null>(null)
+
+  useLayoutEffect(() => {
+    setPortalRole(getSessionRole())
+  }, [])
+
+  const maskCustomerPii = shouldMaskCustomerPii(portalRole)
+  const privacyRegistry = useMemo(() => buildClientPrivacyRegistry(bookings), [bookings])
 
   const cancelBooking = (id: string, ref: string, e: React.MouseEvent) => {
     e.preventDefault()
@@ -30,10 +42,11 @@ export function LiveBookingFeed() {
   }
 
   return (
-    <div className="bg-white rounded-[10px] border border-gray-100 shadow-[var(--shadow-card)] p-6 card-hover">
-      <div className="flex items-center justify-between mb-4">
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-gradient-to-br from-white via-slate-50/30 to-[#eff6ff]/50 p-6 shadow-[0_4px_24px_-4px_rgba(15,44,74,0.1)] card-hover">
+      <div className="pointer-events-none absolute right-0 top-0 h-20 w-20 rounded-full bg-emerald-500/5 blur-2xl" />
+      <div className="relative flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <h3 className="text-base font-semibold text-gray-900">Live Bookings</h3>
+          <h3 className="text-base font-semibold tracking-tight text-slate-900">Live Bookings</h3>
           <span className="flex items-center gap-1.5 text-xs text-green-600">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
@@ -47,7 +60,9 @@ export function LiveBookingFeed() {
         Front desk can cancel a reservation using the stop control — same list as All Bookings.
       </p>
       <div className="space-y-0 divide-y divide-gray-100">
-        {bookings.map((booking, i) => (
+        {bookings.map((booking, i) => {
+          const pres = getCustomerPresentation(booking, privacyRegistry, maskCustomerPii)
+          return (
           <motion.div
             key={booking.id}
             initial={{ opacity: 0, x: -20 }}
@@ -62,12 +77,15 @@ export function LiveBookingFeed() {
               )}
             />
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700 text-xs font-medium flex items-center justify-center shrink-0 group-hover:shadow-md transition-shadow">
-              {booking.customer.avatar}
+              {maskCustomerPii ? pres.avatarLabel.slice(0, 3) : booking.customer.avatar}
             </div>
             <div className="flex-1 min-w-0">
               <span className="text-sm font-medium text-gray-900 group-hover:text-brand transition-colors">
-                {booking.customer.name}
+                {pres.displayName}
               </span>
+              {maskCustomerPii && (
+                <span className="text-xs text-gray-500 ml-2 tabular-nums">{pres.detailLine}</span>
+              )}
               <span className="text-xs text-gray-400 ml-2">{booking.service}</span>
             </div>
             <span className="text-xs text-gray-400 shrink-0">{formatTime(booking.startAt)}</span>
@@ -84,7 +102,8 @@ export function LiveBookingFeed() {
               </button>
             )}
           </motion.div>
-        ))}
+          )
+        })}
       </div>
       <Link
         href="/bookings"

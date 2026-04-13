@@ -1,7 +1,11 @@
 'use client'
 
+import { useLayoutEffect, useState } from 'react'
 import { OCCUPANCY_DATA } from '@/lib/mock-data'
 import { cn } from '@/lib/utils'
+import { getSessionRole } from '@/lib/admin-session'
+import type { PortalRole } from '@/lib/roles'
+import { maskOccupancyCurrentLabel, shouldMaskCustomerPii } from '@/lib/customer-privacy'
 
 const statusStyles: Record<string, { bg: string; text: string; label: string; dot: string }> = {
   occupied: { bg: 'bg-blue-50', text: 'text-blue-700', label: 'Occupied', dot: 'bg-blue-500' },
@@ -11,16 +15,26 @@ const statusStyles: Record<string, { bg: string; text: string; label: string; do
 }
 
 export function OccupancyGrid() {
+  const [portalRole, setPortalRole] = useState<PortalRole | null>(null)
+
+  useLayoutEffect(() => {
+    setPortalRole(getSessionRole())
+  }, [])
+
+  const mask = shouldMaskCustomerPii(portalRole)
+
   return (
-    <div className="bg-white rounded-[10px] border border-gray-100 shadow-[var(--shadow-card)] p-6">
-      <h3 className="text-base font-semibold text-gray-900 mb-4">Resource Status</h3>
+    <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-gradient-to-br from-white via-slate-50/40 to-[#eff6ff]/60 p-6 shadow-[0_4px_24px_-4px_rgba(15,44,74,0.1)]">
+      <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[#1565C0]/8 blur-2xl" />
+      <h3 className="relative text-base font-semibold tracking-tight text-slate-900 mb-4">Resource Status</h3>
       <div className="grid grid-cols-2 gap-2">
         {OCCUPANCY_DATA.map((item, i) => {
           const style = statusStyles[item.status] || statusStyles.available
+          const currentLabel = maskOccupancyCurrentLabel(item.current, mask)
           return (
             <div
               key={item.resource}
-              className="rounded-lg p-3 border border-gray-100 hover:border-gray-200 card-hover animate-scale-in"
+              className="rounded-xl p-3 border border-slate-100/90 bg-white/70 backdrop-blur-sm hover:border-slate-200 card-hover animate-scale-in"
               style={{ animationDelay: `${i * 0.05}s` }}
             >
               <div className="flex items-center gap-1.5 mb-1.5">
@@ -30,9 +44,9 @@ export function OccupancyGrid() {
               <span className={cn('inline-block text-[10px] font-medium px-1.5 py-0.5 rounded-full', style.bg, style.text)}>
                 {style.label}
               </span>
-              {item.current && (
+              {currentLabel && (
                 <div className="text-[10px] text-gray-500 mt-1">
-                  {item.current} {item.until && `· until ${item.until}`}
+                  {currentLabel} {item.until && `· until ${item.until}`}
                 </div>
               )}
             </div>

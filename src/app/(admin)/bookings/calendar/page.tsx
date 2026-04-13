@@ -1,11 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo, useLayoutEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { OCCUPANCY_DATA } from '@/lib/mock-data'
 import { useBookings } from '@/context/bookings-context'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { cn, formatTime } from '@/lib/utils'
+import { getSessionEmail, getSessionRole } from '@/lib/admin-session'
+import { getStaffProfileByEmail } from '@/lib/roles'
+import { filterBookingsForStaffMember } from '@/lib/staff-bookings'
+import { buildClientPrivacyRegistry, getCustomerPresentation, shouldMaskCustomerPii } from '@/lib/customer-privacy'
+import type { PortalRole } from '@/lib/roles'
 
 const HOURS = Array.from({ length: 14 }, (_, i) => i + 7) // 7am to 8pm
 
@@ -25,8 +30,27 @@ const RESOURCE_NAMES = OCCUPANCY_DATA.map(o => o.resource)
 export default function CalendarPage() {
   const { bookings } = useBookings()
   const [view, setView] = useState<'day' | 'week'>('day')
+  const [portalRole, setPortalRole] = useState<PortalRole | null>(null)
+  const [staffEmail, setStaffEmail] = useState('')
 
-  const getBookingsForResource = (resource: string) => bookings.filter((b) => b.resource === resource)
+  useLayoutEffect(() => {
+    setPortalRole(getSessionRole())
+    setStaffEmail(getSessionEmail())
+  }, [])
+
+  const visibleBookings = useMemo(() => {
+    const role = portalRole
+    if (role === 'STAFF') {
+      const profile = getStaffProfileByEmail(staffEmail)
+      if (profile) return filterBookingsForStaffMember(bookings, profile)
+    }
+    return bookings
+  }, [bookings, portalRole, staffEmail])
+
+  const privacyRegistry = useMemo(() => buildClientPrivacyRegistry(visibleBookings), [visibleBookings])
+  const maskCustomerPii = shouldMaskCustomerPii(portalRole)
+
+  const getBookingsForResource = (resource: string) => visibleBookings.filter((b) => b.resource === resource)
 
   return (
     <div>
@@ -92,6 +116,7 @@ export default function CalendarPage() {
                       const left = ((startHour - 7) / 14) * 100
                       const width = ((endHour - startHour) / 14) * 100
                       const colors = SERVICE_COLORS[booking.service] || { bg: 'bg-gray-100', border: 'border-gray-400' }
+                      const pres = getCustomerPresentation(booking, privacyRegistry, maskCustomerPii)
 
                       if (left < 0 || left > 100) return null
 
@@ -100,9 +125,9 @@ export default function CalendarPage() {
                           key={booking.id}
                           className={cn('absolute top-1 bottom-1 rounded-md px-2 py-1 border-l-2 cursor-pointer hover:opacity-80 overflow-hidden', colors.bg, colors.border)}
                           style={{ left: `${Math.max(0, left)}%`, width: `${Math.min(width, 100 - left)}%` }}
-                          title={`${booking.customer.name} - ${booking.service}\n${formatTime(booking.startAt)} - ${formatTime(booking.endAt)}`}
+                          title={`${pres.displayName} · ${booking.service}\n${formatTime(booking.startAt)} - ${formatTime(booking.endAt)}`}
                         >
-                          <div className="text-[10px] font-medium text-gray-900 truncate">{booking.customer.name}</div>
+                          <div className="text-[10px] font-medium text-gray-900 truncate">{pres.displayName}</div>
                           <div className="text-[9px] text-gray-500 truncate">{formatTime(booking.startAt)} - {formatTime(booking.endAt)}</div>
                         </div>
                       )

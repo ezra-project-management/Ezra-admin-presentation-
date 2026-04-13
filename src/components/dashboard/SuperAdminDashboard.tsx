@@ -91,8 +91,10 @@ function AdminHomeDashboard({ variant }: { variant: 'super' | 'manager' }) {
         <div className="xl:col-span-2">
           <RevenueChart />
         </div>
-        <div className="rounded-[10px] border border-gray-100 bg-white p-6 shadow-[var(--shadow-card)]">
-          <h3 className="mb-4 text-base font-semibold text-gray-900">Revenue by category</h3>
+        <div className="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-gradient-to-b from-white to-slate-50/80 p-6 shadow-[0_4px_24px_-4px_rgba(15,44,74,0.1)]">
+          <div className="pointer-events-none absolute -left-4 bottom-0 h-28 w-28 rounded-full bg-[#C9A84C]/10 blur-2xl" />
+          <h3 className="relative mb-1 text-base font-semibold tracking-tight text-slate-900">Revenue by category</h3>
+          <p className="relative mb-4 text-xs text-slate-500">Share of billings in the demo period</p>
           <ServicePieChart />
         </div>
       </div>

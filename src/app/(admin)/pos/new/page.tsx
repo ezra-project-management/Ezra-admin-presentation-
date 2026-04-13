@@ -1,11 +1,31 @@
 'use client'
 
-import { useState } from 'react'
+import { useLayoutEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { getSessionEmail, getSessionRole } from '@/lib/admin-session'
+import { canAccessPath } from '@/lib/roles'
 import { ItemCataloguePanel } from '@/components/pos/ItemCataloguePanel'
 import { OrderSummaryPanel, type OrderItem } from '@/components/pos/OrderSummaryPanel'
 
 export default function POSPage() {
+  const router = useRouter()
+  const [allowed, setAllowed] = useState<boolean | null>(null)
   const [items, setItems] = useState<OrderItem[]>([])
+
+  useLayoutEffect(() => {
+    const role = getSessionRole()
+    const email = getSessionEmail()
+    if (!role || !email) {
+      setAllowed(false)
+      router.replace('/auth/login')
+      return
+    }
+    const ok = canAccessPath(role, '/pos/new', email)
+    setAllowed(ok)
+    if (!ok) {
+      router.replace('/pos/transactions')
+    }
+  }, [router])
 
   const handleAddItem = (item: { name: string; category: string; price: number }) => {
     setItems(prev => {
@@ -27,6 +47,14 @@ export default function POSPage() {
 
   const handleClear = () => {
     setItems([])
+  }
+
+  if (allowed === null || !allowed) {
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center text-sm text-gray-500">
+        {allowed === null ? 'Loading…' : 'Redirecting…'}
+      </div>
+    )
   }
 
   return (

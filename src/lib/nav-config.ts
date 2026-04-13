@@ -161,7 +161,8 @@ function filterNavItem(role: PortalRole, email: string, item: NavItem): NavItem 
   if (item.children?.length) {
     const kids = filterChildren(role, email, item.label, item.children)
     if (!kids?.length) return null
-    return { ...item, children: kids }
+    const href = canAccessPath(role, item.href, email) ? item.href : kids[0].href
+    return { ...item, href, children: kids }
   }
   return canAccessPath(role, item.href, email) ? item : null
 }
