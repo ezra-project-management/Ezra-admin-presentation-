@@ -31,17 +31,7 @@ export default function RootLayout({
     <html lang="en" className={`${jakarta.variable} ${jetbrains.variable}`}>
       <body>
         {children}
-        <Toaster
-          position="top-right"
-          richColors
-          toastOptions={{
-            classNames: {
-              toast: 'rounded-md border border-slate-200 shadow-lg text-[13px]',
-              title: 'font-medium text-slate-900',
-              description: 'text-slate-600',
-            },
-          }}
-        />
+        <Toaster position="top-right" richColors />
       </body>
     </html>
   )

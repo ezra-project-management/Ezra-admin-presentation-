@@ -21,14 +21,20 @@ export function RevenueBarChart() {
   return (
     <div className="w-full h-[280px]">
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={REVENUE_DAILY} margin={{ top: 5, right: 20, bottom: 5, left: 20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
+        <ComposedChart data={REVENUE_DAILY} margin={{ top: 8, right: 20, bottom: 5, left: 12 }}>
+          <defs>
+            <linearGradient id="revenueBarFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#1976D2" stopOpacity={1} />
+              <stop offset="100%" stopColor="#0F2C4A" stopOpacity={0.95} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="#E8ECF2" vertical={false} />
           <XAxis dataKey="day" fontSize={12} tickLine={false} axisLine={{ stroke: '#E5E7EB' }} />
           <YAxis fontSize={12} tickLine={false} axisLine={{ stroke: '#E5E7EB' }} tickFormatter={(v: number) => `${(v / 1000).toFixed(0)}K`} />
           <Tooltip content={<CustomTooltip />} />
           <Legend wrapperStyle={{ fontSize: 12 }} />
-          <Bar dataKey="revenue" name="Revenue" fill="#1565C0" radius={[4, 4, 0, 0]} barSize={32} />
-          <Line dataKey="target" name="Daily Target" stroke="#C9A84C" strokeDasharray="6 3" dot={false} strokeWidth={2} />
+          <Bar dataKey="revenue" name="Revenue" fill="url(#revenueBarFill)" radius={[6, 6, 0, 0]} barSize={34} />
+          <Line dataKey="target" name="Daily target" stroke="#C9A84C" strokeDasharray="5 4" dot={{ r: 3, fill: '#C9A84C', strokeWidth: 0 }} strokeWidth={2} />
         </ComposedChart>
       </ResponsiveContainer>
     </div>

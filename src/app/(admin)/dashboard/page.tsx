@@ -5,8 +5,7 @@ import { useRouter } from 'next/navigation'
 import { getSessionEmail, getSessionRole } from '@/lib/admin-session'
 import type { PortalRole } from '@/lib/roles'
 import { getStaffProfileByEmail } from '@/lib/roles'
-import { SuperAdminDashboard } from '@/components/dashboard/SuperAdminDashboard'
-import { ManagerDashboard } from '@/components/dashboard/ManagerDashboard'
+import { SuperAdminDashboard, ManagerDashboard } from '@/components/dashboard/SuperAdminDashboard'
 import { StaffDashboard } from '@/components/dashboard/StaffDashboard'
 
 export default function DashboardPage() {

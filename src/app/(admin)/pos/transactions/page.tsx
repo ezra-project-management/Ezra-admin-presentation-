@@ -1,25 +1,15 @@
 'use client'
 
-import { useState, useMemo, useLayoutEffect } from 'react'
+import { useState } from 'react'
 import { Eye, AlertOctagon, FileText } from 'lucide-react'
 import { toast } from 'sonner'
 import { MOCK_TRANSACTIONS, type Transaction } from '@/lib/mock-data'
 import { formatCurrency, formatDateTime } from '@/lib/utils'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { StatusBadge } from '@/components/ui/StatusBadge'
-import { getSessionRole } from '@/lib/admin-session'
-import type { PortalRole } from '@/lib/roles'
-import { buildPosCustomerOrdinalMap, posCustomerDisplayName } from '@/lib/client-privacy'
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState<Transaction[]>(MOCK_TRANSACTIONS)
-  const [portalRole, setPortalRole] = useState<PortalRole | null>(null)
-
-  useLayoutEffect(() => {
-    setPortalRole(getSessionRole())
-  }, [])
-
-  const posOrdinalMap = useMemo(() => buildPosCustomerOrdinalMap(transactions), [transactions])
   const [voidDialog, setVoidDialog] = useState<string | null>(null)
   const [voidReason, setVoidReason] = useState('')
   const [voidPin, setVoidPin] = useState(['', '', '', ''])
@@ -59,7 +49,7 @@ export default function TransactionsPage() {
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Ref#</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Date/Time</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Cashier</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Guest</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Customer</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Items</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Method</th>
               <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Amount</th>
@@ -72,7 +62,7 @@ export default function TransactionsPage() {
                   <td className="px-4 py-3 font-mono text-xs text-gray-500">{txn.reference}</td>
                   <td className="px-4 py-3 text-sm text-gray-600">{formatDateTime(txn.createdAt)}</td>
                   <td className="px-4 py-3 text-sm">{txn.cashier}</td>
-                  <td className="px-4 py-3 text-sm">{posCustomerDisplayName(txn, portalRole, posOrdinalMap)}</td>
+                  <td className="px-4 py-3 text-sm">{txn.customer}</td>
                   <td className="px-4 py-3 text-sm text-gray-600">{txn.items[0]?.name}{txn.items.length > 1 ? ` +${txn.items.length - 1} more` : ''}</td>
                   <td className="px-4 py-3"><span className={`text-xs font-medium px-2 py-0.5 rounded-full ${txn.method === 'MPESA' ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-600'}`}>{txn.method}</span></td>
                   <td className="px-4 py-3 text-sm font-medium text-right">{formatCurrency(txn.total)}</td>

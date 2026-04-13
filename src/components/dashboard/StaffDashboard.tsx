@@ -29,7 +29,7 @@ export function StaffDashboard({ profile }: StaffDashboardProps) {
     <div>
       <PageHeader
         title={`Hi, ${profile.name.split(' ')[0]}`}
-        subtitle="Your assigned sessions only — check guests in, complete, or cancel when needed"
+        subtitle="Your assigned sessions only. Check guests in, complete, or cancel when needed."
         actions={
           <Link
             href="/bookings"
@@ -42,10 +42,10 @@ export function StaffDashboard({ profile }: StaffDashboardProps) {
       />
 
       <div className="rounded-md border border-slate-200 bg-slate-50 text-slate-700 text-[13px] px-4 py-3 mb-6 leading-relaxed">
-        <span className="font-medium text-slate-900">Access scope · Staff</span>
+        <span className="font-medium text-slate-900">Access scope (staff)</span>
         <span className="text-slate-600">
           {' '}
-          — Only sessions assigned to you (or the full demo sample if you use the generic staff login). Revenue totals, other providers&apos; calendars,
+          Only sessions assigned to you, or the full demo sample if you use the generic staff login. Revenue totals, other providers&apos; calendars,
           and user administration are not shown.
         </span>
       </div>

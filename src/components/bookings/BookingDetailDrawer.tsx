@@ -8,41 +8,20 @@ import { formatCurrency, formatDate, formatTime } from '@/lib/utils'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import { Avatar } from '@/components/ui/Avatar'
 import { BookingStatusTimeline } from './BookingStatusTimeline'
-import type { PortalRole } from '@/lib/roles'
-import {
-  guestAvatarSeed,
-  guestDisplayEmail,
-  guestDisplayName,
-  guestDisplayPhone,
-} from '@/lib/client-privacy'
 
 interface BookingDetailDrawerProps {
   booking: Booking | null
   open: boolean
   onOpenChange: (open: boolean) => void
   onStatusChange?: (bookingId: string, newStatus: string) => void
-  portalRole?: PortalRole | null
-  ordinalMap?: Map<string, number>
 }
 
-export function BookingDetailDrawer({
-  booking,
-  open,
-  onOpenChange,
-  onStatusChange,
-  portalRole = null,
-  ordinalMap = new Map(),
-}: BookingDetailDrawerProps) {
+export function BookingDetailDrawer({ booking, open, onOpenChange, onStatusChange }: BookingDetailDrawerProps) {
   if (!booking) return null
-
-  const displayName = guestDisplayName(booking, portalRole, ordinalMap)
-  const displayEmail = guestDisplayEmail(booking, portalRole)
-  const displayPhone = guestDisplayPhone(booking, portalRole)
-  const avatarSeed = guestAvatarSeed(booking, portalRole, ordinalMap)
 
   const handleCheckIn = () => {
     onStatusChange?.(booking.id, 'CHECKED_IN')
-    toast.success(`${displayName} checked in`)
+    toast.success(`${booking.customer.name} checked in successfully`)
   }
 
   const handleComplete = () => {
@@ -83,13 +62,13 @@ export function BookingDetailDrawer({
             <BookingStatusTimeline currentStatus={booking.status} />
 
             <div className="border-t border-gray-100 pt-4 mt-2">
-              <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Guest</h4>
+              <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Customer</h4>
               <div className="flex items-center gap-3">
-                <Avatar name={avatarSeed} size="lg" />
+                <Avatar name={booking.customer.name} size="lg" />
                 <div>
-                  <div className="font-semibold text-gray-900">{displayName}</div>
-                  <div className="text-xs text-gray-500">{displayEmail}</div>
-                  <div className="text-xs text-gray-500">{displayPhone}</div>
+                  <div className="font-semibold text-gray-900">{booking.customer.name}</div>
+                  <div className="text-xs text-gray-500">{booking.customer.email}</div>
+                  <div className="text-xs text-gray-500">{booking.customer.phone}</div>
                 </div>
               </div>
             </div>
@@ -144,7 +123,7 @@ export function BookingDetailDrawer({
           <div className="p-4 border-t border-gray-100 bg-gray-50 space-y-2">
             {booking.status === 'CONFIRMED' && (
               <button onClick={handleCheckIn} className="w-full py-2.5 bg-brand text-white font-medium rounded-[var(--btn-radius)] hover:bg-brand-light transition-colors">
-                Check in guest
+                Check In Customer
               </button>
             )}
             {booking.status === 'CHECKED_IN' && (

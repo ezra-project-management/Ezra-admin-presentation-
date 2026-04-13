@@ -5,6 +5,10 @@ import { REVENUE_BY_SERVICE } from '@/lib/mock-data'
 import { formatCurrency } from '@/lib/utils'
 
 const total = REVENUE_BY_SERVICE.reduce((sum, item) => sum + item.value, 0)
+const totalLabel =
+  total >= 1_000_000
+    ? `KES ${(total / 1_000_000).toFixed(2)}M`
+    : `KES ${(total / 1_000).toFixed(0)}K`
 
 function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload: { service: string; value: number } }> }) {
   if (!active || !payload?.[0]) return null
@@ -20,8 +24,8 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<
 
 export function ServicePieChart() {
   return (
-    <div>
-      <div className="w-full h-[240px] relative">
+    <div className="w-full min-h-[240px] min-w-0">
+      <div className="relative h-[240px] w-full min-w-0">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -42,7 +46,7 @@ export function ServicePieChart() {
         </ResponsiveContainer>
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <span className="text-xs text-gray-400">Total</span>
-          <span className="text-lg font-bold text-gray-900">KES 910K</span>
+          <span className="text-lg font-bold text-gray-900">{totalLabel}</span>
         </div>
       </div>
       <div className="space-y-2 mt-4">

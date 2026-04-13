@@ -9,7 +9,7 @@ export function RevenueChart() {
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="text-base font-semibold text-gray-900">Revenue This Week</h3>
-          <p className="text-xs text-gray-400 mt-0.5">Mar 4 – Mar 10, 2026</p>
+          <p className="text-xs text-gray-400 mt-0.5">Mar 4 to Mar 10, 2026</p>
         </div>
         <button className="flex items-center gap-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-[var(--btn-radius)] px-3 py-1.5 hover:bg-gray-50">
           <Download className="w-3.5 h-3.5" />

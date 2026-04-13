@@ -175,7 +175,7 @@ export const REVENUE_DAILY = [
 
 export const REVENUE_BY_SERVICE = [
   { service: 'Events', value: 420000, fill: '#0F2C4A' },
-  { service: 'Wellness', value: 134500, fill: '#2E86AB' },
+  { service: 'Personal care', value: 134500, fill: '#2E86AB' },
   { service: 'Business', value: 98000, fill: '#15803D' },
   { service: 'Fitness', value: 71000, fill: '#7C3AED' },
 ]
