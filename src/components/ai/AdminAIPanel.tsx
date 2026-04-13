@@ -84,7 +84,7 @@ export function AdminAIPanel() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
+          model: 'llama-3.3-70b-versatile',
           max_tokens: 1000,
           system: SYSTEM_PROMPT,
           messages: [...messages, userMessage]
