@@ -73,7 +73,6 @@ const PREFIXES: Record<Exclude<PortalRole, 'SUPER_ADMIN'>, string[]> = {
     '/customers',
     '/staff',
     '/finance',
-    '/payslips',
     '/analytics',
     '/communications',
     '/system/settings',
@@ -90,14 +89,13 @@ const PREFIXES: Record<Exclude<PortalRole, 'SUPER_ADMIN'>, string[]> = {
     '/communications',
     '/analytics',
   ],
-  // Staff: lane-only — schedules, bookings, payslips, service pages. No POS, CRM, team directory, or comms.
+  // Staff: lane-only — schedules, bookings, service pages. No POS, CRM, team directory, or comms.
   STAFF: [
     '/dashboard',
     '/bookings',
     '/services',
-    '/payslips',
   ],
-  FINANCE: ['/finance', '/pos/transactions', '/payslips'],
+  FINANCE: ['/finance', '/pos/transactions'],
 }
 
 export function canAccessPath(role: PortalRole, pathname: string, email: string): boolean {
@@ -112,17 +110,11 @@ export function canAccessPath(role: PortalRole, pathname: string, email: string)
   /** Help desk — available to every signed-in portal role. */
   if (p === '/support' || p.startsWith('/support/')) return true
 
-  /** Org-wide payroll — finance only here (super admin already returned true above). */
-  if (p === '/finance/payroll' || p.startsWith('/finance/payroll/')) {
-    return role === 'FINANCE'
-  }
-
   if (role === 'FINANCE') {
     return PREFIXES.FINANCE.some((prefix) => p === prefix || p.startsWith(prefix + '/'))
   }
 
   if (role === 'STAFF') {
-    if (p.startsWith('/payslips')) return true
     if (p.startsWith('/system')) return false
     if (p.startsWith('/customers')) return false
     if (p.startsWith('/analytics')) return false

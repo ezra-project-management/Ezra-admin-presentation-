@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useLayoutEffect, useState } from 'react'
-import { Landmark, TrendingUp, CreditCard, Wallet, ArrowRight } from 'lucide-react'
+import { Landmark, TrendingUp, CreditCard, ArrowRight } from 'lucide-react'
 import { getSessionRole } from '@/lib/admin-session'
 import type { PortalRole } from '@/lib/roles'
 import { PageHeader } from '@/components/ui/PageHeader'
@@ -23,13 +23,6 @@ const cards = [
     icon: CreditCard,
     roles: ['FINANCE', 'SUPER_ADMIN', 'MANAGER'] as PortalRole[],
   },
-  {
-    href: '/finance/payroll',
-    title: 'Payroll roster',
-    desc: 'Gross pay, deductions, and net for every role — staff, managers, leadership.',
-    icon: Wallet,
-    roles: ['FINANCE', 'SUPER_ADMIN'] as PortalRole[],
-  },
 ]
 
 export default function FinanceOverviewPage() {
@@ -45,7 +38,7 @@ export default function FinanceOverviewPage() {
     <div>
       <PageHeader
         title="Finance desk"
-        subtitle="Revenue, payments, and payroll — demo figures for Ezra Center."
+        subtitle="Revenue and payments — demo figures for Ezra Center."
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -76,8 +69,8 @@ export default function FinanceOverviewPage() {
       </div>
 
       <div className="mt-8 rounded-xl border border-amber-200/80 bg-amber-50/60 px-4 py-3 text-sm text-amber-950">
-        <span className="font-medium">Demo data.</span> Payroll and payslips use illustrative KES amounts for presentation —
-        not legal advice or live payroll integration.
+        <span className="font-medium">Demo data.</span> Figures are illustrative for presentation — not legal advice or a live
+        finance integration.
       </div>
     </div>
   )

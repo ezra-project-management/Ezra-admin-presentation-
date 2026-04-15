@@ -21,7 +21,6 @@ import {
   ScrollText,
   Landmark,
   LifeBuoy,
-  Receipt,
   Wallet,
   ConciergeBell,
 } from 'lucide-react'
@@ -125,10 +124,6 @@ const NAV_GROUPS_FULL: NavGroup[] = [
     items: [{ label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard }],
   },
   {
-    label: 'MY PAY',
-    items: [{ label: 'My payslips', href: '/payslips', icon: Receipt }],
-  },
-  {
     label: 'OPERATIONS',
     items: [
       {
@@ -183,7 +178,6 @@ const NAV_GROUPS_FULL: NavGroup[] = [
     label: 'FINANCE',
     items: [
       { label: 'Finance desk', href: '/finance', icon: Landmark },
-      { label: 'Payroll roster', href: '/finance/payroll', icon: Wallet },
       { label: 'Revenue', href: '/finance/revenue', icon: TrendingUp },
       { label: 'Payments', href: '/finance/payments', icon: CreditCard },
     ],
@@ -252,7 +246,6 @@ export function filterNavGroups(role: PortalRole, email: string): NavGroup[] {
         label: 'FINANCE',
         items: [
           { label: 'Overview', href: '/finance', icon: Landmark },
-          { label: 'Payroll roster', href: '/finance/payroll', icon: Wallet },
           { label: 'Revenue', href: '/finance/revenue', icon: TrendingUp },
           { label: 'Payments', href: '/finance/payments', icon: CreditCard },
         ],
