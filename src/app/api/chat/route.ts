@@ -5,7 +5,7 @@ const SYSTEM_PROMPT = `You are the Ezra Annex Admin AI — a professional, frien
 You assist admins with bookings, revenue reporting, staff info, wellness services, maintenance, and operational queries.
 
 REVENUE STREAMS & KEY FIGURES (2026 Budget):
-- Meetings, Events & Restaurant: Q1 KES 2.2M → Q4 KES 3.4M | Annual KES 31.5M
+- Meetings, Events & Restaurant: Q1 KES 2.2M to Q4 KES 3.4M | Annual KES 31.5M
   * Conferences/Executive Meetings: KES 5,000/person (min ~40 guests)
   * Business Forums: KES 4,500/person
   * Gala Nights (Banquet Hall): KES 6,000/person (150 guests)
@@ -13,10 +13,10 @@ REVENUE STREAMS & KEY FIGURES (2026 Budget):
   * Informal Meetings/Chamas: KES 200/person
   * Upscale Dining (Green Room): KES 7,000/person
   * Terrace Snacks (3rd Floor): KES 1,000/person
-- Cafeteria (Sundays): ~KES 101,600/week | Annual KES 5.3M
-- Nyama Choma (Sundays from Feb 2026): Annual KES 4.96M | Goat cost KES 8,000 → sells KES 16,000
+- Cafeteria (Sundays): approx KES 101,600/week | Annual KES 5.3M
+- Nyama Choma (Sundays from Feb 2026): Annual KES 4.96M | Goat cost KES 8,000 sells for KES 16,000
 - Wellness (from Oct 2025):
-  * Salon: KES 4,500/person (~4 clients/day) → KES 468K/month
+  * Salon: KES 4,500/person (~4 clients/day) = KES 468K/month
   * Women's Steam & Massage: KES 4,500/person
   * Barber Shop: KES 1,000/person
   * Men's Steam & Massage: KES 2,500/person
@@ -46,63 +46,81 @@ STAFF (76 total, Q4):
 - PAYE 30%: KES 809,460/month
 
 KEY OPERATING COSTS:
-- Long-term lease: KES 829,200/month (2,806 sqm @ KES 300/sqm, Karen)
+- Long-term lease: KES 829,200/month (2,806 sqm at KES 300/sqm, Karen)
 - Electricity: KES 100,000/month
 - Food Costs: 30% of F&B revenue
 - Security: KES 56,000/month
 - IT setup (CAPEX): KES 1.2M Year 1
-- Salon supplies: ~KES 140,400/month
-- Insurance (Medical/WIBA): KES 105,000–185,000/month
+- Salon supplies: approx KES 140,400/month
+- Insurance (Medical/WIBA): KES 105,000-185,000/month
 
-BOOKINGS INFO:
-- Events bookable: Gala Nights, Weddings, Birthdays, Anniversaries at Banquet Hall
-- Conferences/Forums: pre-booking required; min 40 guests recommended
+BOOKINGS:
+- Events: Gala Nights, Weddings, Birthdays, Anniversaries at Banquet Hall
+- Conferences/Forums: pre-booking required, min 40 guests
 - Nyama Choma: Sundays only (building to weekdays)
-- Cafeteria: Sundays (4–5 per month)
+- Cafeteria: Sundays (4-5 per month)
 - Wellness: daily once operations begin
 
 MAINTENANCE:
 - Standby maintenance technician on staff
 - Security: 1 supervisor + 2 personnel (1 parking, 1 premises)
-- Report maintenance issues by describing the area and problem
 
-ASSUMPTIONS:
-- Clientele grows ~10 guests/quarter per service
-- Wellness starts Oct 2025; full revenue from 2026
-- Business turns profitable Q2 2026 onwards
-- Income tax 30% on declared profit
-
-Keep responses concise and professional. Use KES currency. For bookings, give pricing and availability. For financials, cite specific figures. This is a premium property — maintain a warm, premium tone.`;
+Keep responses concise and professional. Use KES currency. This is a premium property in Karen, Nairobi.`;
 
 export async function POST(req: NextRequest) {
   try {
-    const { messages } = await req.json();
+    const body = await req.json();
+    const messages = body?.messages;
+
+    if (!messages || !Array.isArray(messages)) {
+      return NextResponse.json(
+        { error: "Invalid request: messages array required" },
+        { status: 400 }
+      );
+    }
+
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      console.error("ANTHROPIC_API_KEY is not set");
+      return NextResponse.json({ error: "API key not configured" }, { status: 500 });
+    }
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY || "",
+        "x-api-key": apiKey,
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
+        model: "claude-haiku-4-5-20251001",
         max_tokens: 1024,
         system: SYSTEM_PROMPT,
-        messages,
+        messages: messages.map((m: { role: string; content: string }) => ({
+          role: m.role,
+          content: m.content,
+        })),
       }),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      const error = await response.text();
-      return NextResponse.json({ error }, { status: response.status });
+      console.error("Anthropic API error:", JSON.stringify(data));
+      return NextResponse.json(
+        { error: data?.error?.message ?? "Anthropic API error" },
+        { status: response.status }
+      );
     }
 
-    const data = await response.json();
-    const text = data.content?.find((b: { type: string }) => b.type === "text")?.text ?? "";
+    const text =
+      data.content?.find(
+        (b: { type: string; text?: string }) => b.type === "text"
+      )?.text ?? "";
+
     return NextResponse.json({ message: text });
   } catch (err) {
-    console.error("Chat API error:", err);
+    console.error("Chat route error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
