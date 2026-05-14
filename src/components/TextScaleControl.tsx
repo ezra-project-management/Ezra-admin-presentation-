@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { GripVertical, Type, Minus, Plus, RotateCcw } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -86,7 +86,7 @@ export function TextScaleControl({ className }: { className?: string }) {
     setAt(TEXT_SCALE_LEVELS[next])
   }
 
-  const inlineStyle = useMemo<React.CSSProperties | undefined>(() => {
+  const inlineStyle = useMemo<CSSProperties | undefined>(() => {
     if (!pos) return undefined
     return { left: `${pos.left}px`, top: `${pos.top}px`, transform: 'none' }
   }, [pos])
@@ -154,42 +154,43 @@ export function TextScaleControl({ className }: { className?: string }) {
       role="region"
       aria-label="Text size"
       className={cn(
-        'fixed bottom-4 left-1/2 z-[200] flex -translate-x-1/2 items-center gap-1 rounded-full border border-gray-200 bg-white/95 px-2 py-1.5 shadow-lg backdrop-blur-md sm:bottom-6',
+        // Fixed footprint: only position changes when dragged; layout identical on all viewports.
+        'fixed bottom-4 left-1/2 z-[200] flex h-10 w-[272px] min-h-10 max-h-10 min-w-[272px] max-w-[272px] shrink-0 -translate-x-1/2 flex-nowrap items-center gap-1 rounded-full border border-gray-200 bg-white/95 px-2 py-0 shadow-lg backdrop-blur-md select-none sm:bottom-6',
         className
       )}
       style={inlineStyle}
     >
       <button
         type="button"
-        className="mr-1 flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-700 cursor-move touch-none"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-700 cursor-move touch-none"
         aria-label="Move text size control"
         title="Drag to move"
         onPointerDown={onDragHandlePointerDown}
       >
         <GripVertical className="h-4 w-4" aria-hidden />
       </button>
-      <span className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-gray-500">
-        <Type className="h-3.5 w-3.5 text-[#1565C0]" aria-hidden />
+      <span className="inline-flex shrink-0 items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-gray-500">
+        <Type className="h-3.5 w-3.5 shrink-0 text-[#1565C0]" aria-hidden />
         Text
       </span>
-      <div className="flex items-center gap-0.5 rounded-full bg-gray-100/90 p-0.5">
+      <div className="flex shrink-0 items-center gap-0.5 rounded-full bg-gray-100/90 p-0.5">
         <button
           type="button"
           onClick={() => step(-1)}
           disabled={safeIndex <= 0}
-          className="flex h-8 w-8 items-center justify-center rounded-full text-gray-800 transition-colors hover:bg-white disabled:opacity-35"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-gray-800 transition-colors hover:bg-white disabled:opacity-35"
           aria-label="Smaller text"
         >
           <Minus className="h-4 w-4" />
         </button>
-        <span className="min-w-[2.75rem] text-center font-mono text-xs font-semibold tabular-nums text-gray-900">
+        <span className="inline-flex w-11 shrink-0 items-center justify-center font-mono text-xs font-semibold tabular-nums text-gray-900">
           {Math.round(scale * 100)}%
         </span>
         <button
           type="button"
           onClick={() => step(1)}
           disabled={safeIndex >= TEXT_SCALE_LEVELS.length - 1}
-          className="flex h-8 w-8 items-center justify-center rounded-full text-gray-800 transition-colors hover:bg-white disabled:opacity-35"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-gray-800 transition-colors hover:bg-white disabled:opacity-35"
           aria-label="Larger text"
         >
           <Plus className="h-4 w-4" />
@@ -198,7 +199,7 @@ export function TextScaleControl({ className }: { className?: string }) {
       <button
         type="button"
         onClick={() => setAt(1)}
-        className="mr-1 flex h-8 w-8 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-amber-50 hover:text-amber-900"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-amber-50 hover:text-amber-900"
         aria-label="Reset text size to default"
         title="Reset"
       >
